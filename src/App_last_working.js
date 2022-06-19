@@ -7,8 +7,7 @@ import {
 	Navigate,
 	useParams,
 } from 'react-router-dom';
-import Modal from './components/modal.js';
-import Toast from './components/toast.js';
+
 import { useState, useEffect } from 'react';
 import useLocalStorage from './useLocalStorage';
 import Agent from './routes/agent';
@@ -18,44 +17,35 @@ import EditMember from './routes/editMember';
 import ViewMember from './routes/viewMember';
 import AddCondition from './routes/addCondition';
 import EditCondition from './routes/editCondition';
+// move button functions out of subnav and use callbacks in App here
+import SubNavigation from './components/subNavigation';
+//
 import MembershipInfo from './components/membershipInfo';
 import Memberlist from './components/memberList';
-import { Toast as BootstrapToast } from 'bootstrap';
 
+// import { Toast } from 'bootstrap';
 const App = () => {
 	const navigate = useNavigate();
+
 	const [agentData, setAgentData] = useLocalStorage('agentData', []);
 	const [agentState, setAgentState] = useState(agentData);
+
 	const [membershipData, setMembershipData] = useLocalStorage(
 		'membershipData',
 		[]
 	);
 	const [membershipState, setMembershipState] = useState(membershipData);
+
 	const [memberData, setMemberData] = useLocalStorage('memberData', []);
 	const [memberDataState, setMemberDataState] = useState(memberData);
-	const [messageState, setMessageState] = useState([]);
 
 	useEffect(() => {
 		document.body.classList.add('bg-light');
+		// console.log(Toast);
+		// var toastEl = document.getElementById('toastContainer');
+		// const bsToast = new Toast(toastEl);
+		// bsToast.show();
 	}, []);
-
-	function addMessage(messageText) {
-		const message = {
-			id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds(),
-			body: messageText,
-		};
-
-		const messages = [...messageState, message];
-		setMessageState(messages);
-		console.log('updated messages:', messageState);
-	}
-
-	function callbackMessageDelete(messageId) {
-		const messages = messageState.filter(
-			(_message) => _message.id !== messageId
-		);
-		setMessageState(messages);
-	}
 
 	function getMemberById(id) {
 		return memberDataState.find((element) => element.id === id);
@@ -83,19 +73,6 @@ const App = () => {
 		}
 	}
 
-	function callbackClearForm() {
-		console.log('going to clear form....');
-		setMembershipState([]);
-		setMembershipData([]);
-		setMemberDataState([]);
-		setMemberData([]);
-		//navigate('membership');
-	}
-
-	function callbackSubmitForm() {
-		addMessage('m0');
-	}
-
 	function callbackMembershipUpdate(data) {
 		setMembershipState(data);
 		setMembershipData(data);
@@ -115,6 +92,7 @@ const App = () => {
 	}
 
 	function callbackMemberEdit(member) {
+		console.log('callback!');
 		const members = memberData.map((element) =>
 			element.id !== member.id ? element : member
 		);
@@ -182,7 +160,6 @@ const App = () => {
 
 	// check for sufficient data in agent and membership here
 	const RequireData = ({ children }) => {
-		console.log('requireData');
 		if (!hasAgentData()) {
 			return <Navigate to="/agent" />;
 		} else if (!hasMembershipData()) {
@@ -202,12 +179,7 @@ const App = () => {
 					}}
 				/>
 			);
-		} else
-			return (
-				<div className="border bg-white rounded px-4 pt-4 pb-4 shadow-sm">
-					Select a member to continue.
-				</div>
-			);
+		}
 	};
 
 	const MemberView = () => {
@@ -282,10 +254,6 @@ const App = () => {
 		return (
 			<>
 				<Navigation agent={agentState} />
-				<Messages
-					messageState={messageState}
-					callbackMessageDelete={callbackMessageDelete}
-				/>
 				<div className="container mt-5">
 					<Outlet />
 				</div>
@@ -298,25 +266,16 @@ const App = () => {
 		return (
 			<>
 				<Navigation agent={agentState} />
-				<SubmitBar
-					submitCallback={callbackSubmitForm}
-					clearCallback={callbackClearForm}
-				/>
-				<Messages
-					messageState={messageState}
-					callbackMessageDelete={callbackMessageDelete}
-				/>
+				<SubmitBar />
+				{/* <SubNavigation /> */}
 
-				<div className="container mt-5">
+				<div className="container mt-5" id="toastContainer">
 					<div className="row">
 						<div className="col-4">
 							<div className="mb-5">
 								<MembershipInfo data={membershipState} />
-								<Link to="/membership" className="btn btn-secondary mt-3">
-									Update
-								</Link>
 							</div>
-
+							{}
 							{Object.keys(memberData).length > 0 && (
 								<Memberlist
 									members={memberDataState}
@@ -370,7 +329,18 @@ const App = () => {
 						</RequireData>
 					}
 				>
-					<Route index element={<MemberIndex />} />
+					<Route
+						index
+						element={
+							<MemberIndex />
+							// add MemberIndex comp that looks for any members
+							// if not then offer member add page
+							// else something like below
+							//<main style={{ padding: '1rem' }}>
+							//	<p>Select a member</p>
+							//</main>
+						}
+					/>
 					<Route path="add" element={<MemberAdd />} />
 					<Route path="edit/:member" element={<MemberEdit />} />
 					<Route path="view/:member" element={<MemberView />} />
@@ -385,76 +355,20 @@ const App = () => {
 	);
 };
 
-const Messages = ({ messageState, callbackMessageDelete }) => {
-	useEffect(() => {
-		const options = {
-			animation: true,
-			delay: 2500,
-			autohide: false,
-		};
-
-		const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-		toastElList.map(function (toastEl) {
-			toastEl.addEventListener('hidden.bs.toast', function () {
-				callbackMessageDelete(toastEl.id);
-			});
-			const toast = new BootstrapToast(toastEl, options);
-			return toast.show();
-		});
-	}, [callbackMessageDelete]);
-
+const SubmitBar = () => {
 	return (
-		<div className="px-5">
-			{messageState.length > 0 &&
-				messageState.map((message, index) => (
-					<Toast key={message.id} id={message.id} body={message.body} />
-				))}
-		</div>
-	);
-};
-
-const SubmitBar = ({ submitCallback, clearCallback }) => {
-	return (
-		<>
-			<Modal
-				title="Confirm reset"
-				body="All data will be removed. Are you sure you want to reset this form?"
-				actionCallback={() => clearCallback()}
-				actionText="Confirm reset"
-				id="abandonModal"
-			/>
-
-			<Modal
-				title="Confirm submit"
-				body="Are you sure you want to submit this form?"
-				actionCallback={() => submitCallback()}
-				actionText="Submit"
-				id="submitModal"
-			/>
-
-			<div className="px-3 py-2 border-bottom mb-3 shadow-sm">
-				<div className="container d-flex flex-wrap justify-content-end">
-					<div className="text-end">
-						<button
-							type="button"
-							className="btn btn-primary me-2"
-							data-bs-toggle="modal"
-							data-bs-target="#submitModal"
-						>
-							Submit
-						</button>
-						<button
-							type="button"
-							className="btn btn-light text-dark"
-							data-bs-toggle="modal"
-							data-bs-target="#abandonModal"
-						>
-							Clear
-						</button>
-					</div>
+		<div className="px-3 py-2 border-bottom mb-3 shadow-sm">
+			<div className="container d-flex flex-wrap justify-content-end">
+				<div className="text-end">
+					<button type="button" className="btn btn-primary me-2">
+						Submit
+					</button>
+					<button type="button" className="btn btn-light text-dark ">
+						Clear
+					</button>
 				</div>
 			</div>
-		</>
+		</div>
 	);
 };
 
@@ -484,6 +398,18 @@ const Navigation = ({ agent }) => {
 					</div>
 				</div>
 			</header>
+			{/* <div className="px-3 py-2 border-bottom mb-3 shadow-sm">
+				<div className="container d-flex flex-wrap justify-content-end">
+					<div class="text-end">
+						<button type="button" class="btn btn-primary me-2">
+							Submit
+						</button>
+						<button type="button" class="btn btn-light text-dark ">
+							Clear
+						</button>
+					</div>
+				</div>
+			</div> */}
 		</>
 	);
 };
