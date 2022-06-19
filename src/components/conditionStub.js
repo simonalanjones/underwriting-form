@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import Modal from '../components/modal.js';
+import Modal from './common/modal.js';
 
 function ConditionStub({ condition, handleDelete, member }) {
 	const editUrl = `/members/edit-condition/${condition.id}/${member.id}`;

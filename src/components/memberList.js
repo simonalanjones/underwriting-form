@@ -1,5 +1,5 @@
 import React from 'react';
-import Modal from '../components/modal.js';
+import Modal from './common/modal.js';
 import { useNavigate, Link } from 'react-router-dom';
 //import { useState, useEffect } from 'react';
 

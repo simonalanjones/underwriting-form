@@ -10,7 +10,7 @@ export default function AddCondition({
 	};
 
 	const handleSubmit = (fields) => {
-		let uniqueId =
+		const uniqueId =
 			new Date().getTime().toString(36) + new Date().getUTCMilliseconds();
 
 		const condition = {

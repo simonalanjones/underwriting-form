@@ -7,8 +7,8 @@ import {
 	Navigate,
 	useParams,
 } from 'react-router-dom';
-import Modal from './components/modal.js';
-import Toast from './components/toast.js';
+import Modal from './components/common/modal.js';
+import Toast from './components/common/toast.js';
 import { useState, useEffect } from 'react';
 import useLocalStorage from './useLocalStorage';
 import Agent from './routes/agent';
