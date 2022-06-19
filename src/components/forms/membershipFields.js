@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import RadioOptions from '../components/common/radioOptions';
+import RadioOptions from '../common/radioOptions';
 
 function MembershipFields(props) {
 	const formRef = useRef();

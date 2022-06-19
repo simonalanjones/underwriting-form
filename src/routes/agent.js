@@ -1,4 +1,4 @@
-import AgentFields from '../components/agentFields';
+import AgentFields from '../components/forms/agentFields';
 
 export default function Agent({ agent, updateCallback, updateCallbackCancel }) {
 	const handleCancel = () => {
