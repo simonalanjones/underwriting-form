@@ -1,5 +1,4 @@
 import ConditionStub from '../components/conditionStub';
-//import { Link } from 'react-router-dom';
 function MemberConditions({ member, deleteConditionCallback }) {
 	return (
 		<>
@@ -18,7 +17,6 @@ function MemberConditions({ member, deleteConditionCallback }) {
 			)}
 
 			{member.conditions.length === 0 && (
-				// <div className="col-lg-6 mx-auto">
 				<div className="border bg-white rounded px-4 pt-4 mb-4 shadow-sm">
 					<p className="mb-4">
 						There are no conditions entered for this member.

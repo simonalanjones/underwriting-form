@@ -6,11 +6,8 @@ export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 			id: member.id,
 			userFirstName: fields.userFirstName,
 			userLastName: fields.userLastName,
-			membershipNumber: fields.membershipNumber,
 			phoneNumber: fields.phoneNumber,
 			dateOfBirth: fields.dateOfBirth,
-			dateCompleted: fields.dateCompleted,
-			memberSwitchFrom: fields.memberSwitchFrom,
 			conditions: member.conditions,
 		};
 

@@ -11,8 +11,8 @@ export default function Toast(params) {
 			id={id}
 		>
 			<div className="toast-header">
-				<strong className="me-auto">Bootstrap</strong>
-				<small>999 mins ago</small>
+				<strong className="me-auto">Notification</strong>
+				{/* <small>999 mins ago</small> */}
 				<button
 					type="button"
 					className="btn-close"
