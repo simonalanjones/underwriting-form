@@ -1,4 +1,3 @@
-//import MemberStub from '../components/memberStub';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import Modal from '../components/common/modal';

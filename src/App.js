@@ -36,11 +36,6 @@ const App = () => {
 	const [memberDataState, setMemberDataState] = useState(memberData);
 	const [messageState, setMessageState] = useState([]);
 
-	useEffect(() => {
-		document.body.classList.add('bg-light');
-		document.title = 'Conditional Switch underwriting form';
-	}, []);
-
 	function addMessage(messageText) {
 		const message = {
 			id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds(),
@@ -78,6 +73,13 @@ const App = () => {
 
 	function callbackSetSelectedMember(memberId) {
 		setSelectedMember(memberId);
+	}
+
+	function getSelectedMemberId() {
+		const member = getMemberById(selectedMember);
+		if (member !== undefined) {
+			return selectedMember.id;
+		}
 	}
 
 	function callbackAgentUpdate(data) {
@@ -183,8 +185,9 @@ const App = () => {
 		} else if (!hasMembershipData()) {
 			navigateUrl = '/membership';
 		} else {
-			if (selectedMember !== undefined) {
-				navigateUrl = `/members/view/${selectedMember}`;
+			const selectedMemberId = getSelectedMemberId();
+			if (selectedMemberId !== undefined) {
+				navigateUrl = `/members/view/${selectedMemberId}`;
 			} else {
 				navigateUrl = '/members';
 			}
@@ -402,9 +405,9 @@ const App = () => {
 const Messages = ({ messageState, callbackMessageDelete }) => {
 	useEffect(() => {
 		const options = {
-			animation: true,
-			delay: 2500,
-			autohide: false,
+			//animation: true,
+			//delay: 2500,
+			//autohide: false,
 		};
 
 		const toastElList = [].slice.call(document.querySelectorAll('.toast'));
