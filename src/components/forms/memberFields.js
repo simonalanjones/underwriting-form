@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import SelectOptions from '../common/selectOptions';
 
 function MemberFields(props) {
 	const formRef = useRef();
@@ -10,6 +11,8 @@ function MemberFields(props) {
 	const [fields, setFields] = useState({
 		userFirstName: '',
 		userLastName: '',
+		relation: '',
+		title: '',
 		phoneNumber: '',
 		dateOfBirth: '',
 	});
@@ -38,6 +41,8 @@ function MemberFields(props) {
 			setFields({
 				userFirstName: props.data.userFirstName,
 				userLastName: props.data.userLastName,
+				relation: props.data.relation,
+				title: props.data.title,
 				phoneNumber: props.data.phoneNumber,
 				dateOfBirth: props.data.dateOfBirth,
 			});
@@ -63,7 +68,7 @@ function MemberFields(props) {
 					<div className="row mb-4">
 						<div className="col">
 							<label htmlFor="userFirstName" className="form-label">
-								Member first name
+								First name
 							</label>
 
 							<input
@@ -83,7 +88,7 @@ function MemberFields(props) {
 						</div>
 						<div className="col">
 							<label htmlFor="userLastName" className="form-label">
-								Member last name
+								Last name
 							</label>
 
 							<input
@@ -104,7 +109,53 @@ function MemberFields(props) {
 					</div>
 
 					<div className="mb-4">
-						<label htmlFor="agentEmail" className="form-label">
+						<div className="row mb-4">
+							<div className="col">
+								<label htmlFor="relation" className="form-label">
+									Relation
+								</label>
+
+								<SelectOptions
+									name="relation"
+									id="relation"
+									changeHandler={handleChange}
+									selected={fields.relation}
+									options={[
+										'Main subscriber',
+										'Male dependant',
+										'Female dependant',
+										'Male child',
+										'Female child',
+										'Other',
+									]}
+									required={true}
+								/>
+								<div className="invalid-feedback">
+									Please select member relation
+								</div>
+							</div>
+							<div className="col">
+								<label htmlFor="title" className="form-label">
+									Title
+								</label>
+
+								<SelectOptions
+									name="title"
+									id="title"
+									changeHandler={handleChange}
+									selected={fields.title}
+									options={['Mr', 'Mrs', 'Miss', 'Master', 'Other']}
+									required={true}
+								/>
+								<div className="invalid-feedback">
+									Please select member title
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div className="mb-4">
+						<label htmlFor="phoneNumber" className="form-label">
 							Telephone No.
 						</label>
 

@@ -9,6 +9,8 @@ export default function AddMember({ callbackUpdate, callbackCancel }) {
 			id: uniqueId,
 			userFirstName: fields.userFirstName,
 			userLastName: fields.userLastName,
+			title: fields.title,
+			relation: fields.relation,
 			phoneNumber: fields.phoneNumber,
 			dateOfBirth: fields.dateOfBirth,
 			conditions: [],

@@ -6,6 +6,8 @@ export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 			id: member.id,
 			userFirstName: fields.userFirstName,
 			userLastName: fields.userLastName,
+			title: fields.title,
+			relation: fields.relation,
 			phoneNumber: fields.phoneNumber,
 			dateOfBirth: fields.dateOfBirth,
 			conditions: member.conditions,
@@ -19,10 +21,13 @@ export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 	};
 
 	return (
-		<MemberFields
-			data={member}
-			handleSubmit={handleSubmit}
-			handleCancel={handleCancel}
-		/>
+		<>
+			<h6 className="pb-1">Edit member</h6>
+			<MemberFields
+				data={member}
+				handleSubmit={handleSubmit}
+				handleCancel={handleCancel}
+			/>
+		</>
 	);
 }
