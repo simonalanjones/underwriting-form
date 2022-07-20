@@ -1,6 +1,20 @@
-import { useParams, Outlet } from 'react-router-dom';
+import { useParams, Outlet, Link } from 'react-router-dom';
+import Navigation from '../navigation';
+import SubmitBar from '../submitBar';
+import Messages from '../messages';
+import MembershipInfo from '../membershipInfo';
+import Memberlist from '../memberList';
+import { memberCount, getMembers } from '../../services/memberDataService';
+
 //
-export default function MemberLayout() {
+export default function MemberLayout({
+	agentState,
+	callbackSubmitForm,
+	callbackClearForm,
+	messageState,
+	callbackMessageDelete,
+	membershipState,
+}) {
 	//console.log('member data:', getMembers());
 	const params = useParams();
 	return (
