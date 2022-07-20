@@ -1,4 +1,4 @@
-import MemberFields from '../components/forms/memberFields';
+import MemberFields from '../components/views/forms/memberFields';
 import { useParams } from 'react-router-dom';
 
 export default function EditMember({ member, callbackUpdate, callbackCancel }) {

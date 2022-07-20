@@ -1,18 +1,16 @@
-import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-import {
-	getMembers,
-	getMember,
-	memberCount,
-} from './services/memberDataService.js';
+import { getMembers, getMember } from './services/memberData.js';
 import useLocalStorage from './useLocalStorage';
-import Agent from './routes/agent';
-import Membership from './routes/membership';
 
-import Layout from './components/layouts/layout';
-import MemberLayout from './components/layouts/memberLayout';
+import RequireData from './components/requireData.js';
+import Layout from './components/views/layouts/layout';
+import MemberLayout from './components/views/layouts/memberLayout';
+import Agent from './components/route/agent';
+import Membership from './components/route/membership';
+import Index from './components/route/index';
 import MemberView from './components/route/memberView';
 import MemberIndex from './components/route/memberIndex';
 import MemberEdit from './components/route/memberEdit';
@@ -21,13 +19,10 @@ import ConditionAdd from './components/route/conditionAdd';
 import ConditionEdit from './components/route/conditionEdit';
 
 const App = () => {
-	//console.log('memberData = ', getMember('l5mk1sup937'));
-	console.log('member count = ', memberCount());
-
 	const navigate = useNavigate();
 
-	const [agentData, setAgentData] = useLocalStorage('agentData', []);
-	const [agentState, setAgentState] = useState(agentData);
+	// const [agentData, setAgentData] = useLocalStorage('agentData', []);
+	// const [agentState, setAgentState] = useState(agentData);
 	const [membershipData, setMembershipData] = useLocalStorage(
 		'membershipData',
 		[]
@@ -60,14 +55,6 @@ const App = () => {
 		setMessageState(messages);
 	}
 
-	function hasMembershipData() {
-		return Object.keys(membershipData).length > 0;
-	}
-
-	function hasAgentData() {
-		return Object.keys(agentData).length > 0;
-	}
-
 	function callbackSetSelectedMember(memberId) {
 		setSelectedMember(memberId);
 	}
@@ -81,16 +68,6 @@ const App = () => {
 				console.log('not undefined and is', selectedMember);
 				return selectedMember.id;
 			}
-		}
-	}
-
-	function callbackAgentUpdate(data) {
-		setAgentState(data);
-		setAgentData(data);
-		if (hasMembershipData()) {
-			navigate('/');
-		} else {
-			navigate('membership');
 		}
 	}
 
@@ -110,42 +87,8 @@ const App = () => {
 	function callbackMembershipUpdate(data) {
 		setMembershipState(data);
 		setMembershipData(data);
-		navigate('/');
+		//navigate('/');
 	}
-
-	//
-
-	// can't move this function as dependancy on agentData etc
-	const Index = () => {
-		let navigateUrl = '';
-
-		// this will be exported to js function like memberData
-		if (!hasAgentData()) {
-			navigateUrl = '/agent';
-			// this will be exported to js function like memberData
-		} else if (!hasMembershipData()) {
-			navigateUrl = '/membership';
-		} else {
-			const selectedMemberId = getSelectedMemberId();
-			if (selectedMemberId !== undefined) {
-				navigateUrl = `/members/view/${selectedMemberId}`;
-			} else {
-				navigateUrl = '/members';
-			}
-		}
-		return <Navigate to={navigateUrl} />;
-	};
-
-	// check for sufficient data in agent and membership here
-	const RequireData = ({ children }) => {
-		if (!hasAgentData()) {
-			return <Navigate to="/agent" />;
-		} else if (!hasMembershipData()) {
-			return <Navigate to="/membership" />;
-		} else {
-			return children;
-		}
-	};
 
 	return (
 		<>
@@ -153,23 +96,13 @@ const App = () => {
 				<Route
 					element={
 						<Layout
-							agentState={agentState}
 							messageState={messageState}
 							callbackMessageDelete={callbackMessageDelete}
 						/>
 					}
 				>
 					<Route path="/" element={<Index />} />
-					<Route
-						path="agent"
-						element={
-							<Agent
-								agent={agentState}
-								updateCallback={callbackAgentUpdate}
-								updateCallbackCancel={() => navigate('/')}
-							/>
-						}
-					/>
+					<Route path="agent" element={<Agent />} />
 					<Route
 						path="membership"
 						element={
@@ -187,7 +120,6 @@ const App = () => {
 					element={
 						<RequireData>
 							<MemberLayout
-								agentState={agentState}
 								callbackSubmitForm={callbackSubmitForm}
 								callbackClearForm={callbackClearForm}
 								messageState={messageState}

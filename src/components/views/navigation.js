@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { getAgent, hasAgent } from '../../services/agentData';
 
-export default function Navigation({ agent }) {
+export default function Navigation() {
+	const agent = getAgent();
 	return (
 		<>
 			<header className="p-3 mb-0 border-bottom">
@@ -13,7 +15,7 @@ export default function Navigation({ agent }) {
 								</Link>
 							</li>
 						</ul>
-						{Object.keys(agent).length > 0 && (
+						{hasAgent() && (
 							<div className="dropdown text-end">
 								<Link
 									to="/agent"

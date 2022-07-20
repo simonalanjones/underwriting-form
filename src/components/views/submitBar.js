@@ -1,4 +1,4 @@
-import Modal from '../common/modal';
+import Modal from '../../common/modal';
 export default function SubmitBar({ submitCallback, clearCallback }) {
 	return (
 		<>

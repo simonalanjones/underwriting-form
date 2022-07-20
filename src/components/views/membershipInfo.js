@@ -1,4 +1,4 @@
-import formattedDateString from '../common/formattedDate';
+import formattedDateString from '../../common/formattedDate';
 function MembershipInfo({ data }) {
 	return (
 		<>

@@ -1,4 +1,4 @@
-import MembershipFields from '../components/forms/membershipFields';
+import MembershipFields from '../forms/membershipFields';
 
 export default function Membership({
 	data,

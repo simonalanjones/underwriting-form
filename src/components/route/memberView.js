@@ -3,11 +3,11 @@ import {
 	getMember,
 	deleteMember,
 	updateMember,
-} from '../../services/memberDataService';
+} from '../../services/memberData';
 
 // move this to components
 import ViewMember from '../../routes/viewMember';
-import MemberConditions from '../memberConditions';
+import MemberConditions from '../views/memberConditions';
 
 export default function MemberView({
 	//callbackConditionDelete,

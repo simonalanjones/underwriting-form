@@ -1,4 +1,4 @@
-import { memberCount } from '../../services/memberDataService';
+import { memberCount } from '../../services/memberData';
 import MemberAdd from './memberAdd';
 
 export default function MemberIndex() {

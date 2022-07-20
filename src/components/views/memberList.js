@@ -1,6 +1,6 @@
 import React from 'react';
-import Modal from '../common/modal';
-import MemberIcon from '../common/memberIcon';
+import Modal from '../../common/modal';
+import MemberIcon from '../../common/memberIcon';
 import { useNavigate, Link } from 'react-router-dom';
 
 function Memberlist({ members, selectedId, callbackDeleteMember }) {

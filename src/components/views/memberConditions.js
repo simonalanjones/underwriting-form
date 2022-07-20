@@ -1,4 +1,4 @@
-import ConditionStub from '../components/conditionStub';
+import ConditionStub from './conditionStub';
 function MemberConditions({ member, deleteConditionCallback }) {
 	return (
 		<>

@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import EditCondition from '../../routes/editCondition';
-import { getMember, updateMember } from '../../services/memberDataService';
+import { getMember, updateMember } from '../../services/memberData';
 import { useNavigate } from 'react-router-dom';
 
 export default function ConditionEdit() {

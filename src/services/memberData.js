@@ -22,7 +22,7 @@ export function getMember(id) {
 
 export function addMember(data) {
 	const members = [...getMembers(), data];
-	localStorage.setItem('memberData', JSON.stringify(members));
+	setData(members);
 }
 
 export function updateMember(data) {

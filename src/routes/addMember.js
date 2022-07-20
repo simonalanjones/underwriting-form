@@ -1,4 +1,4 @@
-import MemberFields from '../components/forms/memberFields';
+import MemberFields from '../components/views/forms/memberFields';
 
 export default function AddMember({
 	callbackUpdate,

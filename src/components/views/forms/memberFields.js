@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import SelectOptions from '../../common/selectOptions';
+import SelectOptions from '../../../common/selectOptions';
 import DependantCheck from '../dependantCheck';
 import SubscriberCheck from '../subscriberCheck';
 

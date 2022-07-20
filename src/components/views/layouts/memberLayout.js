@@ -1,14 +1,13 @@
 import { useParams, Outlet, Link } from 'react-router-dom';
 import Navigation from '../navigation';
 import SubmitBar from '../submitBar';
-import Messages from '../messages';
+import Messages from '../../messages';
 import MembershipInfo from '../membershipInfo';
 import Memberlist from '../memberList';
-import { memberCount, getMembers } from '../../services/memberDataService';
+import { memberCount, getMembers } from '../../../services/memberData';
 
 //
 export default function MemberLayout({
-	agentState,
 	callbackSubmitForm,
 	callbackClearForm,
 	messageState,
@@ -19,7 +18,7 @@ export default function MemberLayout({
 	const params = useParams();
 	return (
 		<>
-			<Navigation agent={agentState} />
+			<Navigation />
 			<SubmitBar
 				submitCallback={callbackSubmitForm}
 				clearCallback={callbackClearForm}

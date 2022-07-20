@@ -1,15 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import Navigation from '../navigation';
-import Messages from '../messages';
+import Messages from '../../messages';
 
-export default function Layout({
-	agentState,
-	messageState,
-	callbackMessageDelete,
-}) {
+export default function Layout({ messageState, callbackMessageDelete }) {
 	return (
 		<>
-			<Navigation agent={agentState} />
+			<Navigation />
 
 			<Messages
 				messageState={messageState}

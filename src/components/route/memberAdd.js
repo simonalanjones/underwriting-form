@@ -1,6 +1,6 @@
 import AddMember from '../../routes/addMember';
 
-import { getMembers, addMember } from '../../services/memberDataService';
+import { getMembers, addMember } from '../../services/memberData';
 import { useNavigate } from 'react-router-dom';
 
 export default function MemberAdd() {

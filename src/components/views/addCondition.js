@@ -1,4 +1,4 @@
-import ConditionFields from '../components/forms/conditionFields';
+import ConditionFields from './forms/conditionFields';
 
 export default function AddCondition({
 	member,
