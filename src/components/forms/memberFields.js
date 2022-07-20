@@ -1,9 +1,29 @@
 import React, { useState, useEffect, useRef } from 'react';
-import SelectOptions from '../common/selectOptions';
+import SelectOptions from '../../common/selectOptions';
+import DependantCheck from '../dependantCheck';
+import SubscriberCheck from '../subscriberCheck';
 
 function MemberFields(props) {
 	const formRef = useRef();
+	const submitRef = useRef();
 	const firstnameInput = useRef();
+
+	let relationOptions = [
+		'Main subscriber',
+		'Male dependant',
+		'Female dependant',
+		'Male child',
+		'Female child',
+		'Other',
+	];
+
+	// if flag received to exclude main subscriber from relation options
+	// update the relation array to remove it
+	if (props.hasSubscriber) {
+		relationOptions = relationOptions.filter(
+			(element) => element !== 'Main subscriber'
+		);
+	}
 
 	const handleCancel = props.handleCancel;
 	const handleSubmit = props.handleSubmit;
@@ -16,6 +36,13 @@ function MemberFields(props) {
 		phoneNumber: '',
 		dateOfBirth: '',
 	});
+
+	const [formRelation, setFormRelation] = useState('');
+	const [disclaimerChecked, setDisclaimerChecked] = useState(false);
+
+	function enableSubmit(state) {
+		setDisclaimerChecked(state);
+	}
 
 	// Handle inital submit, checking validation
 	// before passing up to submit in parent component
@@ -38,6 +65,7 @@ function MemberFields(props) {
 	// handle incoming prop data, one-time use
 	useEffect(() => {
 		if (props.data) {
+			console.log(props.data.relation);
 			setFields({
 				userFirstName: props.data.userFirstName,
 				userLastName: props.data.userLastName,
@@ -46,14 +74,42 @@ function MemberFields(props) {
 				phoneNumber: props.data.phoneNumber,
 				dateOfBirth: props.data.dateOfBirth,
 			});
+
+			// repop the selected relation in state
+			// if (props.data.relation === 'Main subscriber') {
+			// 	setFormRelation('subscriber');
+			// } else {
+			// 	setFormRelation('dependant');
+			// }
+			setDisclaimerChecked(true);
 		}
 	}, [props.data]);
+
+	useEffect(() => {
+		if (formRelation !== '') {
+			setDisclaimerChecked(false);
+		}
+	}, [formRelation]);
 
 	const handleChange = (e) => {
 		setFields({
 			...fields,
 			[e.target.name]: e.target.value,
 		});
+
+		// if we change the relation dropdown,
+		// update the state so the relevant disclaimer
+		// checks are shown before submit is enabled
+		if (e.target.name === 'relation') {
+			const input = e.target.value;
+			if (input === '') {
+				setFormRelation('');
+			} else if (input === 'Main subscriber') {
+				setFormRelation('subscriber');
+			} else {
+				setFormRelation('dependant');
+			}
+		}
 	};
 
 	return (
@@ -120,14 +176,7 @@ function MemberFields(props) {
 									id="relation"
 									changeHandler={handleChange}
 									selected={fields.relation}
-									options={[
-										'Main subscriber',
-										'Male dependant',
-										'Female dependant',
-										'Male child',
-										'Female child',
-										'Other',
-									]}
+									options={relationOptions}
 									required={true}
 								/>
 								<div className="invalid-feedback">
@@ -154,39 +203,52 @@ function MemberFields(props) {
 						</div>
 					</div>
 
-					<div className="mb-4">
-						<label htmlFor="phoneNumber" className="form-label">
-							Telephone No.
-						</label>
+					<div className="row mb-4">
+						<div className="col">
+							<label htmlFor="dateOfBirth" className="form-label">
+								Date of Birth
+							</label>
 
-						<input
-							type="input"
-							name="phoneNumber"
-							className="form-control"
-							maxLength="25"
-							id="phoneNumber"
-							value={fields.phoneNumber}
-							onChange={handleChange}
-						/>
-					</div>
+							<input
+								type="date"
+								name="dateOfBirth"
+								className="form-control"
+								id="dateOfBirth"
+								value={fields.dateOfBirth}
+								onChange={handleChange}
+								required
+							/>
+						</div>
 
-					<div className="mb-5">
-						<label htmlFor="dateOfBirth" className="form-label">
-							Date of Birth
-						</label>
+						<div className="col">
+							<label htmlFor="phoneNumber" className="form-label">
+								Telephone No.
+							</label>
 
-						<input
-							type="date"
-							name="dateOfBirth"
-							className="form-control"
-							id="dateOfBirth"
-							value={fields.dateOfBirth}
-							onChange={handleChange}
-							required
-						/>
+							<input
+								type="input"
+								name="phoneNumber"
+								className="form-control"
+								maxLength="25"
+								id="phoneNumber"
+								value={fields.phoneNumber}
+								onChange={handleChange}
+							/>
+						</div>
 					</div>
 				</div>
-				<button type="submit" className="btn btn-primary">
+				{formRelation === 'subscriber' && (
+					<SubscriberCheck callback={enableSubmit} />
+				)}
+				{formRelation === 'dependant' && (
+					<DependantCheck callback={enableSubmit} />
+				)}
+				<button
+					ref={submitRef}
+					type="submit"
+					className="btn btn-primary"
+					disabled={!disclaimerChecked}
+				>
 					{!props.data ? 'Submit' : 'Update'}
 				</button>
 				&nbsp;

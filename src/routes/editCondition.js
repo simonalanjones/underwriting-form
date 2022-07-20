@@ -23,7 +23,7 @@ export default function EditCondition({
 			notes: fields.notes,
 		};
 
-		callbackUpdate(updatedCondition, member);
+		callbackUpdate(member, updatedCondition);
 	};
 
 	return (

@@ -7,33 +7,25 @@ import {
 	Navigate,
 	useParams,
 } from 'react-router-dom';
-import Modal from './common/modal';
-import Toast from './common/toast';
+import Modal from './components/common/modal.js';
+import Toast from './components/common/toast.js';
 import { useState, useEffect } from 'react';
 
-import {
-	getMembers,
-	getMember,
-	memberCount,
-} from './services/memberDataService.js';
+import { getMembers, getMember } from './services/memberDataService.js';
 import useLocalStorage from './useLocalStorage';
 import Agent from './routes/agent';
 import MembershipInfo from './components/membershipInfo';
 import Membership from './routes/membership';
-
-import MemberView from './components/route/memberView';
-import MemberIndex from './components/route/memberIndex';
-import MemberEdit from './components/route/memberEdit';
-import MemberAdd from './components/route/memberAdd';
-import ConditionAdd from './components/route/conditionAdd';
-import ConditionEdit from './components/route/conditionEdit';
-
+import AddMember from './routes/addMember';
+import EditMember from './routes/editMember';
+import ViewMember from './routes/viewMember';
+import AddCondition from './routes/addCondition';
+import EditCondition from './routes/editCondition';
 import Memberlist from './components/memberList';
 import { Toast as BootstrapToast } from 'bootstrap';
 
 const App = () => {
-	//console.log('memberData = ', getMember('l5mk1sup937'));
-	console.log('member count = ', memberCount());
+	console.log('memberData = ', getMember('l5mk1sup937'));
 
 	const navigate = useNavigate();
 
@@ -44,11 +36,12 @@ const App = () => {
 		[]
 	);
 	const [selectedMember, setSelectedMember] = useState();
+
 	const [membershipState, setMembershipState] = useState(membershipData);
-	//
-	const [memberData, setMemberData] = getMembers();
+
+	const [memberData, setMemberData] = useLocalStorage('memberData', []);
 	const [memberDataState, setMemberDataState] = useState(memberData);
-	//
+
 	const [messageState, setMessageState] = useState([]);
 
 	function addMessage(messageText) {
@@ -70,6 +63,10 @@ const App = () => {
 		setMessageState(messages);
 	}
 
+	function getMemberById(id) {
+		return memberDataState.find((element) => element.id === id);
+	}
+
 	function hasMembershipData() {
 		return Object.keys(membershipData).length > 0;
 	}
@@ -78,19 +75,18 @@ const App = () => {
 		return Object.keys(agentData).length > 0;
 	}
 
+	function hasMemberData() {
+		return Object.keys(memberData).length > 0;
+	}
+
 	function callbackSetSelectedMember(memberId) {
 		setSelectedMember(memberId);
 	}
 
 	function getSelectedMemberId() {
-		if (selectedMember !== undefined) {
-			console.log('selected member ID =', selectedMember);
-			const member = getMember(selectedMember);
-			console.log('member is ', member);
-			if (member !== undefined) {
-				console.log('not undefined and is', selectedMember);
-				return selectedMember.id;
-			}
+		const member = getMemberById(selectedMember);
+		if (member !== undefined) {
+			return selectedMember.id;
 		}
 	}
 
@@ -123,16 +119,78 @@ const App = () => {
 		navigate('/');
 	}
 
-	//
+	function callbackMemberAdd(data) {
+		const members = [...memberData, data];
+		setMemberData(members);
+		setMemberDataState(members);
+		const lastMemberId = data.id;
+		navigate(`members/view/${lastMemberId}`);
+	}
+
+	function callbackMemberEdit(member) {
+		const members = memberData.map((element) =>
+			element.id !== member.id ? element : member
+		);
+
+		setMemberData(members);
+		setMemberDataState(members);
+		navigate(`members/view/${member.id}`);
+	}
+
+	function callbackMemberDelete(memberId) {
+		console.log('called with', memberId);
+		const members = memberData.filter((_member) => _member.id !== memberId);
+		setMemberData(members);
+		setMemberDataState(members);
+		addMessage('Member deleted');
+		navigate('/');
+	}
+
+	function callbackConditionAdd(member, condition) {
+		member.conditions.push(condition);
+
+		const updatedData = memberData.map((_member) =>
+			_member.id !== member.id ? _member : member
+		);
+
+		setMemberData(updatedData);
+		setMemberDataState(updatedData);
+		navigate(`members/view/${member.id}`);
+	}
+
+	function callbackConditionEdit(condition, member) {
+		member.conditions = member.conditions.map((_condition) =>
+			_condition.id === condition.id ? condition : _condition
+		);
+
+		const updatedMemberData = memberData.map((_member) =>
+			_member.id !== member.id ? _member : member
+		);
+
+		setMemberData(updatedMemberData);
+		setMemberDataState(updatedMemberData);
+		navigate(`members/view/${member.id}`);
+	}
+
+	function callbackConditionDelete(condition, member) {
+		member.conditions = member.conditions.filter(
+			(_condition) => _condition.id !== condition.id
+		);
+
+		const updatedMemberData = memberData.map((_member) =>
+			_member.id !== member.id ? _member : member
+		);
+
+		setMemberData(updatedMemberData);
+		setMemberDataState(updatedMemberData);
+	}
 
 	// can't move this function as dependancy on agentData etc
 	const Index = () => {
 		let navigateUrl = '';
 
-		// this will be exported to js function like memberData
 		if (!hasAgentData()) {
 			navigateUrl = '/agent';
-			// this will be exported to js function like memberData
 		} else if (!hasMembershipData()) {
 			navigateUrl = '/membership';
 		} else {
@@ -157,6 +215,96 @@ const App = () => {
 		}
 	};
 
+	const MemberIndex = () => {
+		if (!hasMemberData()) {
+			return (
+				<AddMember
+					callbackUpdate={callbackMemberAdd}
+					callbackCancel={() => {
+						navigate('/');
+					}}
+				/>
+			);
+		} else
+			return (
+				<div className="border bg-white rounded px-4 pt-4 pb-4 shadow-sm">
+					Select a member to continue.
+				</div>
+			);
+	};
+
+	const MemberView = () => {
+		const params = useParams();
+		const member = getMemberById(params.member);
+		return (
+			<ViewMember
+				memberData={memberData}
+				member={member}
+				callbackDeleteCondition={callbackConditionDelete}
+				callbackDeleteMember={callbackMemberDelete}
+				callbackSelected={callbackSetSelectedMember}
+			/>
+		);
+	};
+
+	const MemberAdd = () => {
+		return (
+			<AddMember
+				memberData={memberData}
+				callbackUpdate={callbackMemberAdd}
+				callbackCancel={() => {
+					navigate('/');
+				}}
+			/>
+		);
+	};
+
+	const MemberEdit = () => {
+		const params = useParams();
+		const member = getMemberById(params.member);
+		return (
+			<EditMember
+				member={member}
+				callbackUpdate={callbackMemberEdit}
+				callbackCancel={() => {
+					navigate(`members/view/${member.id}`);
+				}}
+			/>
+		);
+	};
+
+	const ConditionAdd = () => {
+		const params = useParams();
+		const member = getMemberById(params.member);
+		return (
+			<AddCondition
+				member={member}
+				callbackUpdate={callbackConditionAdd}
+				callbackCancel={() => {
+					navigate(`members/view/${member.id}`);
+				}}
+			/>
+		);
+	};
+
+	const ConditionEdit = () => {
+		const params = useParams();
+		const member = getMemberById(params.member);
+		const condition = member['conditions'].find(
+			(element) => element.id === params.condition
+		);
+		return (
+			<EditCondition
+				callbackUpdate={callbackConditionEdit}
+				callbackCancel={() => {
+					navigate(`members/view/${member.id}`);
+				}}
+				condition={condition}
+				member={member}
+			/>
+		);
+	};
+
 	const Layout = () => {
 		return (
 			<>
@@ -174,7 +322,6 @@ const App = () => {
 	};
 
 	const MemberLayout = () => {
-		//console.log('member data:', getMembers());
 		const params = useParams();
 		return (
 			<>
@@ -198,9 +345,10 @@ const App = () => {
 									Update
 								</Link>
 							</div>
-							{memberCount() > 0 && (
+
+							{Object.keys(memberData).length > 0 && (
 								<Memberlist
-									members={getMembers()}
+									members={memberDataState}
 									selectedId={params.member || null}
 								/>
 							)}
@@ -253,12 +401,7 @@ const App = () => {
 					<Route index element={<MemberIndex />} />
 					<Route path="add" element={<MemberAdd />} />
 					<Route path="edit/:member" element={<MemberEdit />} />
-					<Route
-						path="view/:member"
-						element={
-							<MemberView callbackSelected={callbackSetSelectedMember} />
-						}
-					/>
+					<Route path="view/:member" element={<MemberView />} />
 					<Route path="add-condition/:member" element={<ConditionAdd />} />
 					<Route
 						path="edit-condition/:condition/:member"

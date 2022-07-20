@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom';
-import { useEffect } from 'react';
-import Modal from '../components/common/modal';
-import MemberConditions from '../components/memberConditions';
-import MemberIcon from '../components/common/memberIcon';
+//import { useEffect } from 'react';
+import Modal from '../common/modal';
+//import MemberConditions from '../components/memberConditions';
+import MemberIcon from '../common/memberIcon';
+import formattedDateString from '../common/formattedDate';
 
 export default function MemberView({
 	member,
-	callbackDeleteCondition,
+	//callbackDeleteCondition,
 	callbackDeleteMember,
-	callbackSelected,
+	//callbackSelected,
 }) {
-	useEffect(() => {
-		callbackSelected(member.id);
-	}, [callbackSelected, member.id]);
+	// useEffect(() => {
+	// 	callbackSelected(member.id);
+	// }, [callbackSelected, member.id]);
 
 	return (
 		<>
@@ -33,9 +34,10 @@ export default function MemberView({
 						<p className="fs-4 pb-0 mb-0">
 							{member.userFirstName}&nbsp;{member.userLastName}
 						</p>
-						<p className="fs-6 pb-0 mb-0">
-							<small>DOB: {member.dateOfBirth}</small>
-						</p>
+						<div className="fs-6 pb-0 mb-0">
+							<h6>{formattedDateString(member.dateOfBirth)}</h6>
+						</div>
+						<p>{member.relation}</p>
 					</div>
 					<div className="col text-end">
 						<button
@@ -73,19 +75,6 @@ export default function MemberView({
 						</ul>
 					</div>
 				</div>
-			</div>
-			<MemberConditions
-				member={member}
-				deleteConditionCallback={callbackDeleteCondition}
-			/>
-
-			<div className="d-flex gap-2">
-				<Link
-					to={`/members/add-condition/${member.id}`}
-					className="btn btn btn-secondary"
-				>
-					Add condition
-				</Link>
 			</div>
 		</>
 	);

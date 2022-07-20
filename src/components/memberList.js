@@ -1,14 +1,20 @@
 import React from 'react';
-import Modal from './common/modal.js';
-import MemberIcon from './common/memberIcon.js';
+import Modal from '../common/modal';
+import MemberIcon from '../common/memberIcon';
 import { useNavigate, Link } from 'react-router-dom';
 
 function Memberlist({ members, selectedId, callbackDeleteMember }) {
+	console.log('members', members);
 	const navigate = useNavigate();
 
 	function handleDeleteMember() {
 		callbackDeleteMember(selectedId);
 	}
+
+	// sort members so main subscriber listed first
+	members.sort(function (a, b) {
+		return a.relation.search('subscriber') > 0 ? -1 : 0;
+	});
 
 	return (
 		<>
@@ -42,6 +48,7 @@ function Memberlist({ members, selectedId, callbackDeleteMember }) {
 
 							<div className="pt-1 pb-1">
 								<h6>{`${member.userFirstName} ${member.userLastName}`}</h6>
+								<small>{member.relation}</small>
 								<div className="d-sm-none d-xs-none d-md-block">
 									{member.conditions.length} condition
 									{member.conditions.length !== 1 && 's'}

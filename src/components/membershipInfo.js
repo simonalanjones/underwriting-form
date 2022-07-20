@@ -1,3 +1,4 @@
+import formattedDateString from '../common/formattedDate';
 function MembershipInfo({ data }) {
 	return (
 		<>
@@ -20,7 +21,9 @@ function MembershipInfo({ data }) {
 						<li className="list-group-item">
 							<div className="ms-2 me-auto">
 								Date completed
-								<h6 className="fw-bold">{data.dateCompleted}</h6>
+								<h6 className="fw-bold">
+									{formattedDateString(data.dateCompleted)}
+								</h6>
 							</div>
 						</li>
 					</ul>

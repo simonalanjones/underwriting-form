@@ -23,6 +23,10 @@ function MemberConditions({ member, deleteConditionCallback }) {
 					</p>
 				</div>
 			)}
+			{/* <div className="alert alert-warning" role="alert">
+				Conditional Switch requires conditions from last 12 months declaration
+				and planned / pending to be declared
+			</div> */}
 		</>
 	);
 }
