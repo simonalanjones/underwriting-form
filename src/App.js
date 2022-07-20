@@ -1,14 +1,5 @@
-import {
-	Routes,
-	Route,
-	Outlet,
-	Link,
-	useNavigate,
-	Navigate,
-	useParams,
-} from 'react-router-dom';
-import Modal from './common/modal';
-import Toast from './common/toast';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+
 import { useState, useEffect } from 'react';
 
 import {
@@ -18,18 +9,16 @@ import {
 } from './services/memberDataService.js';
 import useLocalStorage from './useLocalStorage';
 import Agent from './routes/agent';
-import MembershipInfo from './components/membershipInfo';
 import Membership from './routes/membership';
 
+import Layout from './components/layouts/layout';
+import MemberLayout from './components/layouts/memberLayout';
 import MemberView from './components/route/memberView';
 import MemberIndex from './components/route/memberIndex';
 import MemberEdit from './components/route/memberEdit';
 import MemberAdd from './components/route/memberAdd';
 import ConditionAdd from './components/route/conditionAdd';
 import ConditionEdit from './components/route/conditionEdit';
-
-import Memberlist from './components/memberList';
-import { Toast as BootstrapToast } from 'bootstrap';
 
 const App = () => {
 	//console.log('memberData = ', getMember('l5mk1sup937'));
@@ -51,6 +40,7 @@ const App = () => {
 	//
 	const [messageState, setMessageState] = useState([]);
 
+	// service / queue for messages (local storage?)
 	function addMessage(messageText) {
 		const message = {
 			id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds(),
@@ -157,68 +147,18 @@ const App = () => {
 		}
 	};
 
-	const Layout = () => {
-		return (
-			<>
-				<Navigation agent={agentState} />
-
-				<Messages
-					messageState={messageState}
-					callbackMessageDelete={callbackMessageDelete}
-				/>
-				<div className="container mt-5">
-					<Outlet />
-				</div>
-			</>
-		);
-	};
-
-	const MemberLayout = () => {
-		//console.log('member data:', getMembers());
-		const params = useParams();
-		return (
-			<>
-				<Navigation agent={agentState} />
-				<SubmitBar
-					submitCallback={callbackSubmitForm}
-					clearCallback={callbackClearForm}
-				/>
-
-				<Messages
-					messageState={messageState}
-					callbackMessageDelete={callbackMessageDelete}
-				/>
-
-				<div className="container mt-5">
-					<div className="row">
-						<div className="col-4-lg col">
-							<div className="mb-5">
-								<MembershipInfo data={membershipState} />
-								<Link to="/membership" className="btn btn-secondary mt-3">
-									Update
-								</Link>
-							</div>
-							{memberCount() > 0 && (
-								<Memberlist
-									members={getMembers()}
-									selectedId={params.member || null}
-								/>
-							)}
-						</div>
-
-						<div className="col-8 ps-5">
-							<Outlet />
-						</div>
-					</div>
-				</div>
-			</>
-		);
-	};
-
 	return (
 		<>
 			<Routes>
-				<Route element={<Layout />}>
+				<Route
+					element={
+						<Layout
+							agentState={agentState}
+							messageState={messageState}
+							callbackMessageDelete={callbackMessageDelete}
+						/>
+					}
+				>
 					<Route path="/" element={<Index />} />
 					<Route
 						path="agent"
@@ -246,7 +186,14 @@ const App = () => {
 					path="members"
 					element={
 						<RequireData>
-							<MemberLayout />
+							<MemberLayout
+								agentState={agentState}
+								callbackSubmitForm={callbackSubmitForm}
+								callbackClearForm={callbackClearForm}
+								messageState={messageState}
+								callbackMessageDelete={callbackMessageDelete}
+								membershipState={membershipState}
+							/>
 						</RequireData>
 					}
 				>
@@ -266,109 +213,6 @@ const App = () => {
 					/>
 				</Route>
 			</Routes>
-		</>
-	);
-};
-
-const Messages = ({ messageState, callbackMessageDelete }) => {
-	useEffect(() => {
-		const options = {
-			//animation: true,
-			//delay: 2500,
-			//autohide: false,
-		};
-
-		const toastElList = [].slice.call(document.querySelectorAll('.toast'));
-		toastElList.map(function (toastEl) {
-			toastEl.addEventListener('hidden.bs.toast', function () {
-				callbackMessageDelete(toastEl.id);
-			});
-			const toast = new BootstrapToast(toastEl, options);
-			return toast.show();
-		});
-	}, [callbackMessageDelete]);
-
-	return (
-		<div className="px-5">
-			{messageState.length > 0 &&
-				messageState.map((message, index) => (
-					<Toast key={message.id} id={message.id} body={message.body} />
-				))}
-		</div>
-	);
-};
-
-const SubmitBar = ({ submitCallback, clearCallback }) => {
-	return (
-		<>
-			<Modal
-				title="Confirm reset"
-				body="All data will be removed. Are you sure you want to reset this form?"
-				actionCallback={() => clearCallback()}
-				actionText="Confirm reset"
-				id="abandonModal"
-			/>
-
-			<Modal
-				title="Confirm submit"
-				body="Are you sure you want to submit this form?"
-				actionCallback={() => submitCallback()}
-				actionText="Submit"
-				id="submitModal"
-			/>
-
-			<div className="px-3 py-2 border-bottom mb-3 shadow-sm">
-				<div className="container d-flex flex-wrap justify-content-end">
-					<div className="text-end">
-						<button
-							type="button"
-							className="btn btn-primary me-2"
-							data-bs-toggle="modal"
-							data-bs-target="#submitModal"
-						>
-							Submit
-						</button>
-						<button
-							type="button"
-							className="btn btn-light text-dark"
-							data-bs-toggle="modal"
-							data-bs-target="#abandonModal"
-						>
-							Clear
-						</button>
-					</div>
-				</div>
-			</div>
-		</>
-	);
-};
-
-const Navigation = ({ agent }) => {
-	return (
-		<>
-			<header className="p-3 mb-0 border-bottom">
-				<div className="container">
-					<div className="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-						<ul className="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-							<li>
-								<Link to={'/'} className="nav-link px-2 link-secondary">
-									Conditional Switch
-								</Link>
-							</li>
-						</ul>
-						{Object.keys(agent).length > 0 && (
-							<div className="dropdown text-end">
-								<Link
-									to="/agent"
-									className="d-block link-dark text-decoration-none"
-								>
-									{agent.name}&nbsp;({agent.email})
-								</Link>
-							</div>
-						)}
-					</div>
-				</div>
-			</header>
 		</>
 	);
 };
