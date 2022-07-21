@@ -1,4 +1,4 @@
-import ConditionFields from '../components/views/forms/conditionFields';
+import ConditionFields from './forms/conditionFields';
 
 export default function EditCondition({
 	callbackUpdate,

@@ -6,7 +6,7 @@ import {
 } from '../../services/memberData';
 
 // move this to components
-import ViewMember from '../../routes/viewMember';
+import ViewMember from '../views/viewMember';
 import MemberConditions from '../views/memberConditions';
 
 export default function MemberView({

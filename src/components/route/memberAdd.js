@@ -1,4 +1,4 @@
-import AddMember from '../../routes/addMember';
+import AddMember from '../views/addMember';
 
 import { getMembers, addMember } from '../../services/memberData';
 import { useNavigate } from 'react-router-dom';

@@ -1,4 +1,5 @@
-import AgentFields from '../forms/agentFields';
+//import AgentFields from '../forms/agentFields';
+import AgentFields from '../views/forms/agentFields';
 import { hasMembership } from '../../services/membershipData';
 import { setAgent, getAgent } from '../../services/agentData';
 import { useNavigate } from 'react-router-dom';

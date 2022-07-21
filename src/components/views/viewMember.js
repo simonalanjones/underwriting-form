@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 //import { useEffect } from 'react';
-import Modal from '../common/modal';
+import Modal from '../../common/modal';
 //import MemberConditions from '../components/memberConditions';
-import MemberIcon from '../common/memberIcon';
-import formattedDateString from '../common/formattedDate';
+import MemberIcon from '../../common/memberIcon';
+import formattedDateString from '../../common/formattedDate';
 
 export default function MemberView({
 	member,

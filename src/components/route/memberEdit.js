@@ -1,4 +1,5 @@
-import EditMember from '../../routes/editMember';
+//import EditMember from '../../routes/editMember';
+import EditMember from '../views/editMember';
 import { getMember, updateMember } from '../../services/memberData';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';

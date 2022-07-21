@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import EditCondition from '../../routes/editCondition';
+import EditCondition from '../views/editCondition';
 import { getMember, updateMember } from '../../services/memberData';
 import { useNavigate } from 'react-router-dom';
 
