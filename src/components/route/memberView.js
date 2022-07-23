@@ -9,11 +9,7 @@ import {
 import ViewMember from '../views/viewMember';
 import MemberConditions from '../views/memberConditions';
 
-export default function MemberView({
-	//callbackConditionDelete,
-	//callbackMemberDelete,
-	callbackSetSelectedMember,
-}) {
+export default function MemberView() {
 	const params = useParams();
 	const member = getMember(params.member);
 	const navigate = useNavigate();
@@ -33,14 +29,7 @@ export default function MemberView({
 
 	return (
 		<>
-			<ViewMember
-				member={member}
-				// point below up to top
-				//callbackDeleteCondition={callbackConditionDelete}
-				//callbackDeleteMember={callbackMemberDelete}
-				callbackDeleteMember={callbackDeleteMember}
-				callbackSelected={callbackSetSelectedMember}
-			/>
+			<ViewMember member={member} callbackDeleteMember={callbackDeleteMember} />
 			<MemberConditions
 				member={member}
 				deleteConditionCallback={callbackDeleteCondition}

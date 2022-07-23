@@ -9,7 +9,6 @@ export default function Agent() {
 	const agent = getAgent();
 
 	const handleCancel = () => {
-		console.log('cancelled agent update');
 		if (hasMembership()) {
 			navigate('/');
 		} else {

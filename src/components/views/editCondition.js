@@ -27,10 +27,13 @@ export default function EditCondition({
 	};
 
 	return (
-		<ConditionFields
-			data={condition}
-			handleCancel={handleCancel}
-			handleSubmit={handleSubmit}
-		/>
+		<>
+			<h6 className="pb-1">Edit condition</h6>
+			<ConditionFields
+				data={condition}
+				handleCancel={handleCancel}
+				handleSubmit={handleSubmit}
+			/>
+		</>
 	);
 }

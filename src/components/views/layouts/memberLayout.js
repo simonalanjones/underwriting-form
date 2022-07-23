@@ -1,21 +1,22 @@
-import { useParams, Outlet, Link } from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import Navigation from '../navigation';
 import SubmitBar from '../submitBar';
 import Messages from '../../messages';
 import MembershipInfo from '../membershipInfo';
 import Memberlist from '../memberList';
-import { memberCount, getMembers } from '../../../services/memberData';
 
-//
+// store message state here?
+
 export default function MemberLayout({
 	callbackSubmitForm,
 	callbackClearForm,
 	messageState,
 	callbackMessageDelete,
-	membershipState,
 }) {
-	//console.log('member data:', getMembers());
-	const params = useParams();
+	function addMessageCallback(message) {
+		console.log('output from memberlayout', message);
+	}
+
 	return (
 		<>
 			<Navigation />
@@ -33,21 +34,16 @@ export default function MemberLayout({
 				<div className="row">
 					<div className="col-4-lg col">
 						<div className="mb-5">
-							<MembershipInfo data={membershipState} />
+							<MembershipInfo />
 							<Link to="/membership" className="btn btn-secondary mt-3">
 								Update
 							</Link>
 						</div>
-						{memberCount() > 0 && (
-							<Memberlist
-								members={getMembers()}
-								selectedId={params.member || null}
-							/>
-						)}
+						<Memberlist />
 					</div>
 
 					<div className="col-8 ps-5">
-						<Outlet />
+						<Outlet addMessageCallback={addMessageCallback} />
 					</div>
 				</div>
 			</div>

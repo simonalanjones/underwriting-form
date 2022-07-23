@@ -1,8 +1,6 @@
-import { useParams } from 'react-router-dom';
-import AddCondition from '../views/addCondition';
-
+import { useParams, useNavigate } from 'react-router-dom';
 import { getMember, updateMember } from '../../services/memberData';
-import { useNavigate } from 'react-router-dom';
+import AddCondition from '../views/addCondition';
 
 export default function ConditionAdd() {
 	const params = useParams();

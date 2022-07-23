@@ -1,20 +1,9 @@
 import { Link } from 'react-router-dom';
-//import { useEffect } from 'react';
 import Modal from '../../common/modal';
-//import MemberConditions from '../components/memberConditions';
 import MemberIcon from '../../common/memberIcon';
 import formattedDateString from '../../common/formattedDate';
 
-export default function MemberView({
-	member,
-	//callbackDeleteCondition,
-	callbackDeleteMember,
-	//callbackSelected,
-}) {
-	// useEffect(() => {
-	// 	callbackSelected(member.id);
-	// }, [callbackSelected, member.id]);
-
+export default function MemberView({ member, callbackDeleteMember }) {
 	return (
 		<>
 			<Modal

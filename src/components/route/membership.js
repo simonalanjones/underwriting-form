@@ -1,13 +1,12 @@
 import MembershipFields from '../views/forms/membershipFields';
+import { setMembership, getMembership } from '../../services/membershipData';
+import { useNavigate } from 'react-router-dom';
 
-export default function Membership({
-	data,
-	updateCallback,
-	updateCallbackCancel,
-}) {
+export default function Membership() {
+	const navigate = useNavigate();
+
 	const handleCancel = () => {
-		console.log('cancelled membership update');
-		updateCallbackCancel();
+		navigate('/');
 	};
 
 	const handleSubmit = (fields) => {
@@ -17,13 +16,14 @@ export default function Membership({
 			memberSwitchFrom: fields.memberSwitchFrom,
 		};
 
-		updateCallback(membership);
+		setMembership(membership);
+		navigate('/');
 	};
 
 	return (
 		<div className="row">
 			<MembershipFields
-				data={data}
+				data={getMembership()}
 				handleSubmit={handleSubmit}
 				handleCancel={handleCancel}
 			/>

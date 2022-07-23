@@ -1,5 +1,7 @@
 import formattedDateString from '../../common/formattedDate';
-function MembershipInfo({ data }) {
+import { getMembership } from '../../services/membershipData';
+function MembershipInfo() {
+	const data = getMembership();
 	return (
 		<>
 			{Object.keys(data).length > 0 && (
@@ -28,7 +30,7 @@ function MembershipInfo({ data }) {
 						</li>
 					</ul>
 				</>
-
+				// alternative horizontal layout
 				// <div className="row row-cols-1 row-cols-md-3 pb-4">
 				// 	<div className="col d-flex justify-content-center">
 				// 		<p>
