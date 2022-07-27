@@ -4,6 +4,7 @@ import { useState } from 'react';
 import RequireData from './common/requireData';
 import Layout from './components/views/layouts/layout';
 import MemberLayout from './components/views/layouts/memberLayout';
+
 //
 import Agent from './components/route/agent';
 import Membership from './components/route/membership';
@@ -15,10 +16,11 @@ import MemberAdd from './components/route/memberAdd';
 import ConditionAdd from './components/route/conditionAdd';
 import ConditionEdit from './components/route/conditionEdit';
 
+import { submit } from './services/submit';
+
 const App = () => {
 	const [messageState, setMessageState] = useState([]);
 
-	// service / queue for messages (local storage?)
 	function addMessage(messageText) {
 		const message = {
 			id: new Date().getTime().toString(36) + new Date().getUTCMilliseconds(),
@@ -28,7 +30,7 @@ const App = () => {
 
 		const messages = [...messageState, message];
 		setMessageState(messages);
-		console.log('updated messages:', messageState);
+		//console.log('updated messages:', messageState);
 	}
 
 	function callbackMessageDelete(messageId) {
@@ -45,7 +47,9 @@ const App = () => {
 	}
 
 	function callbackSubmitForm() {
-		addMessage('m0');
+		submit();
+		// this should attempt to send data and act accordingly below
+		addMessage('Your form has been submitted - no data was sent in the demo');
 	}
 
 	return (

@@ -5,18 +5,12 @@ import Messages from '../../messages';
 import MembershipInfo from '../membershipInfo';
 import Memberlist from '../memberList';
 
-// store message state here?
-
 export default function MemberLayout({
 	callbackSubmitForm,
 	callbackClearForm,
 	messageState,
 	callbackMessageDelete,
 }) {
-	function addMessageCallback(message) {
-		console.log('output from memberlayout', message);
-	}
-
 	return (
 		<>
 			<Navigation />
@@ -43,10 +37,19 @@ export default function MemberLayout({
 					</div>
 
 					<div className="col-8 ps-5">
-						<Outlet addMessageCallback={addMessageCallback} />
+						<Outlet />
 					</div>
 				</div>
 			</div>
+
+			<footer className="footer py-3 mt-5">
+				<div className="container">
+					<span className="text-muted">
+						This is a demonstration application, no data will be sent on
+						submission.
+					</span>
+				</div>
+			</footer>
 		</>
 	);
 }

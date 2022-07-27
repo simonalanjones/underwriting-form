@@ -6,10 +6,7 @@ import './index.css';
 import App from './App';
 
 import 'bootstrap/dist/css/bootstrap.css';
-//import 'bootstrap/dist/js/bootstrap.bundle.min';
-//import '@popperjs/core';
 import 'bootstrap';
-//import 'bootstrap/dist/js/'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

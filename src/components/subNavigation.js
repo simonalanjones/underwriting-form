@@ -1,13 +1,13 @@
 import Modal from '../components/modal.js';
 import Alert from '../components/alert.js';
-import useLocalStorage from '../useLocalStorage';
+
 import { useState } from 'react';
 //import * as bootstrap from 'bootstrap';
+import { getAgent } from '../services/agentData.js';
+import { getMember, memberCount } from '../services/memberData.js';
+import { getMembership } from '../services/membershipData.js';
 
 export default function SubNavigation() {
-	const [agentData] = useLocalStorage('agentData', []);
-	const [membershipData] = useLocalStorage('membershipData', []);
-	const [memberData] = useLocalStorage('memberData', []);
 	const [submitSuccess, setSubmitSuccess] = useState(null);
 	const axios = require('axios').default;
 
@@ -26,9 +26,9 @@ export default function SubNavigation() {
 			'application/x-www-form-urlencoded';
 		axios
 			.post('http://localhost:80/cond-switch/', {
-				agentData: agentData,
-				membershipData: membershipData,
-				memberData: memberData,
+				agentData: getAgent(),
+				membershipData: getMembership(),
+				memberData: getMember(),
 			})
 
 			.then(function (response) {
@@ -73,7 +73,7 @@ export default function SubNavigation() {
 
 			<Modal
 				title="Confirm submit"
-				body="Are you sure you want to submit this form?"
+				body="Are you sure you want to submit this form???"
 				actionCallback={confirmSubmit}
 				actionText="Submit"
 				id="submitModal"
@@ -81,7 +81,7 @@ export default function SubNavigation() {
 
 			<div className="container">
 				<div className="d-grid gap-2 d-md-flex justify-content-md-end">
-					{Object.keys(memberData).length > 0 && (
+					{memberCount() > 0 && (
 						<button
 							className="btn btn-sm btn-primary me-md-2"
 							data-bs-toggle="modal"
