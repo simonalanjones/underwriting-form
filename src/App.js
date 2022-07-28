@@ -4,7 +4,8 @@ import { useState } from 'react';
 import RequireData from './common/requireData';
 import Layout from './components/views/layouts/layout';
 import MemberLayout from './components/views/layouts/memberLayout';
-
+import { clearMembers } from './services/memberData';
+import { clearMembership } from './services/membershipData';
 //
 import Agent from './components/route/agent';
 import Membership from './components/route/membership';
@@ -30,7 +31,6 @@ const App = () => {
 
 		const messages = [...messageState, message];
 		setMessageState(messages);
-		//console.log('updated messages:', messageState);
 	}
 
 	function callbackMessageDelete(messageId) {
@@ -41,8 +41,8 @@ const App = () => {
 	}
 
 	function callbackClearForm() {
-		//setMembershipState([]);
-		//setMembershipData([]);
+		clearMembers();
+		clearMembership();
 		addMessage('The form has been reset');
 	}
 
