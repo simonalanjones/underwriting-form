@@ -1,5 +1,6 @@
 function getData() {
-	return JSON.parse(localStorage.getItem('membershipData'));
+	const data = JSON.parse(localStorage.getItem('membershipData'));
+	return data !== null && data !== undefined ? data : [];
 }
 
 function setData(members) {
@@ -7,7 +8,9 @@ function setData(members) {
 }
 
 export function hasMembership() {
-	return Object.keys(getData()).length > 0;
+	if (getData() !== undefined && getData() !== null) {
+		return Object.keys(getData()).length > 0;
+	}
 }
 
 export function getMembership() {

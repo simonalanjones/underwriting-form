@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import {
 	getMember,
@@ -5,14 +6,23 @@ import {
 	updateMember,
 } from '../../services/memberData';
 
-// move this to components
 import ViewMember from '../views/viewMember';
 import MemberConditions from '../views/memberConditions';
 
 export default function MemberView() {
+	const [member, setMember] = useState('');
+
 	const params = useParams();
-	const member = getMember(params.member);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const member = getMember(params.member);
+		if (!member) {
+			navigate('/');
+		} else {
+			setMember(member);
+		}
+	}, [navigate, params.member]);
 
 	function callbackDeleteMember(id) {
 		deleteMember(id);
@@ -29,20 +39,27 @@ export default function MemberView() {
 
 	return (
 		<>
-			<ViewMember member={member} callbackDeleteMember={callbackDeleteMember} />
-			<MemberConditions
-				member={member}
-				deleteConditionCallback={callbackDeleteCondition}
-			/>
+			{member && (
+				<>
+					<ViewMember
+						member={member}
+						callbackDeleteMember={callbackDeleteMember}
+					/>
+					<MemberConditions
+						member={member}
+						deleteConditionCallback={callbackDeleteCondition}
+					/>
 
-			<div className="d-flex gap-2">
-				<Link
-					to={`/members/add-condition/${member.id}`}
-					className="btn btn btn-secondary"
-				>
-					Add condition
-				</Link>
-			</div>
+					<div className="d-flex gap-2">
+						<Link
+							to={`/members/add-condition/${member.id}`}
+							className="btn btn btn-secondary"
+						>
+							Add condition
+						</Link>
+					</div>
+				</>
+			)}
 		</>
 	);
 }

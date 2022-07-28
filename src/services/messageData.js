@@ -7,7 +7,9 @@ function setData(members) {
 }
 
 export function messageCount() {
-	return getData().length;
+	if (getData() !== undefined && getData() !== null) {
+		return getData().length;
+	}
 }
 
 export function getMessages() {

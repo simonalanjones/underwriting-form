@@ -8,11 +8,11 @@ export default function Index() {
 
 	useEffect(() => {
 		if (!hasAgent()) {
-			navigate('/agent');
+			navigate('agent');
 		} else if (!hasMembership()) {
-			navigate('/membership');
+			navigate('membership');
 		} else {
-			navigate('/members');
+			navigate('members');
 		}
 	}, [navigate]);
 }

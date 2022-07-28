@@ -65,7 +65,6 @@ function MemberFields(props) {
 	// handle incoming prop data, one-time use
 	useEffect(() => {
 		if (props.data) {
-			console.log(props.data.relation);
 			setFields({
 				userFirstName: props.data.userFirstName,
 				userLastName: props.data.userLastName,

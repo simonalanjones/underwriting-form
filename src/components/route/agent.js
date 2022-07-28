@@ -12,7 +12,7 @@ export default function Agent() {
 		if (hasMembership()) {
 			navigate('/');
 		} else {
-			navigate('membership');
+			navigate('/membership');
 		}
 	};
 
@@ -27,7 +27,7 @@ export default function Agent() {
 		if (hasMembership()) {
 			navigate('/');
 		} else {
-			navigate('membership');
+			navigate('/membership');
 		}
 	};
 	return (

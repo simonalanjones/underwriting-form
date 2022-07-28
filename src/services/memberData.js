@@ -1,7 +1,7 @@
 // pure js - just the necessary functions to maintain local storage
-
 function getData() {
-	return JSON.parse(localStorage.getItem('memberData'));
+	const data = JSON.parse(localStorage.getItem('memberData'));
+	return data !== null && data !== undefined ? data : [];
 }
 
 function setData(members) {
@@ -17,7 +17,9 @@ export function memberCount() {
 }
 
 export function getMember(id) {
-	return getData().filter((member) => member.id === id)[0];
+	if (memberCount() > 0) {
+		return getData().filter((member) => member.id === id)[0];
+	}
 }
 
 export function addMember(data) {
@@ -38,6 +40,6 @@ export function deleteMember(id) {
 	setData(members);
 }
 
-export function clearMemberData() {
+export function clearMembers() {
 	setData([]);
 }

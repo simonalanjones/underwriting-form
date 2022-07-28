@@ -16,7 +16,7 @@ export function submit() {
 	axios.defaults.headers.post['Content-Type'] =
 		'application/x-www-form-urlencoded';
 	axios
-		.get('/users', {
+		.get('/submit', {
 			agentData: getAgent(),
 			membershipData: getMembership(),
 			memberData: getMember(),

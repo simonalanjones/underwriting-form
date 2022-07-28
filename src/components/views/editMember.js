@@ -1,9 +1,6 @@
 import MemberFields from './forms/memberFields';
-import { useParams } from 'react-router-dom';
 
 export default function EditMember({ member, callbackUpdate, callbackCancel }) {
-	const params = useParams();
-	console.log(params.member);
 	const handleSubmit = (fields) => {
 		const updatedMemberData = {
 			id: member.id,

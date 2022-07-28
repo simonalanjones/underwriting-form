@@ -1,5 +1,6 @@
 function getData() {
-	return JSON.parse(localStorage.getItem('agentData'));
+	const data = JSON.parse(localStorage.getItem('agentData'));
+	return data !== null && data !== undefined ? data : [];
 }
 
 function setData(members) {
@@ -7,7 +8,7 @@ function setData(members) {
 }
 
 export function hasAgent() {
-	return Object.keys(getAgent()).length > 0;
+	return Object.keys(getData()).length > 0;
 }
 
 export function getAgent() {

@@ -64,6 +64,10 @@ function MembershipFields(props) {
 		maxWidth: 500,
 	};
 
+	const hasData = () => {
+		return props.data !== undefined && props.data !== null;
+	};
+
 	return (
 		<>
 			<form
@@ -126,10 +130,10 @@ function MembershipFields(props) {
 					</div>
 				</div>
 				<button type="submit" className="btn btn-primary">
-					{Object.keys(props.data).length === 0 ? 'Submit' : 'Update'}
+					{hasData() ? 'Update' : 'Submit'}
 				</button>
 				&nbsp;
-				{Object.keys(props.data).length > 0 && (
+				{hasData() && (
 					<button
 						type="submit"
 						onClick={handleCancel}
