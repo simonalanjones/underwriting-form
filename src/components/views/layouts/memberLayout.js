@@ -44,10 +44,10 @@ export default function MemberLayout({
 
 			<footer className="footer py-3 mt-5">
 				<div className="container">
-					<span className="text-muted">
+					<p className="text-muted text-end">
 						This is a demonstration application, no data will be sent on
 						submission.
-					</span>
+					</p>
 				</div>
 			</footer>
 		</>

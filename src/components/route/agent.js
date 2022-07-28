@@ -4,7 +4,7 @@ import { hasMembership } from '../../services/membershipData';
 import { setAgent, getAgent } from '../../services/agentData';
 import { useNavigate } from 'react-router-dom';
 
-export default function Agent() {
+export default function Agent({ postback }) {
 	const navigate = useNavigate();
 	const agent = getAgent();
 
@@ -22,7 +22,7 @@ export default function Agent() {
 			email: fields.agentEmail,
 			dept: fields.agentDept,
 		};
-
+		postback();
 		setAgent(agent);
 		if (hasMembership()) {
 			navigate('/');

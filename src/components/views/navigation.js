@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-
 import { getAgent, hasAgent } from '../../services/agentData';
 
 export default function Navigation() {

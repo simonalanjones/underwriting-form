@@ -9,22 +9,37 @@ import {
 import ViewMember from '../views/viewMember';
 import MemberConditions from '../views/memberConditions';
 
-export default function MemberView() {
+export default function MemberView({ callbackSetSelected, postback }) {
 	const [member, setMember] = useState('');
-
 	const params = useParams();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const member = getMember(params.member);
+		// console.log(member.id, params.member);
+		// console.log(typeof member.id, typeof params.member);
+		// if (member.id !== params.member) {
+		// 	console.log('setting =', member);
+		// 	callbackSetSelected(member);
+		// }
+
 		if (!member) {
 			navigate('/');
 		} else {
 			setMember(member);
+			//callbackSetSelected(member);
 		}
-	}, [navigate, params.member]);
+	}, [navigate, params.member, callbackSetSelected]);
+
+	// useEffect(() => {
+	// 	//callbackSetSelected(member);
+	// 	if (member !== '') {
+	// 		//callbackSetSelected(member);
+	// 	}
+	// }, [member, callbackSetSelected]);
 
 	function callbackDeleteMember(id) {
+		postback();
 		deleteMember(id);
 		navigate('/members');
 	}
@@ -44,6 +59,7 @@ export default function MemberView() {
 					<ViewMember
 						member={member}
 						callbackDeleteMember={callbackDeleteMember}
+						callbackSetSelected={callbackSetSelected}
 					/>
 					<MemberConditions
 						member={member}

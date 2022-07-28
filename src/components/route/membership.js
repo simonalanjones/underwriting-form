@@ -2,7 +2,7 @@ import MembershipFields from '../views/forms/membershipFields';
 import { setMembership, getMembership } from '../../services/membershipData';
 import { useNavigate } from 'react-router-dom';
 
-export default function Membership() {
+export default function Membership({ postback }) {
 	const navigate = useNavigate();
 
 	const handleCancel = () => {
@@ -17,6 +17,7 @@ export default function Membership() {
 		};
 
 		setMembership(membership);
+		postback();
 		navigate('/');
 	};
 

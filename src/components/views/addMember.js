@@ -4,6 +4,7 @@ export default function AddMember({
 	callbackUpdate,
 	callbackCancel,
 	hasSubscriber,
+	postback,
 }) {
 	const handleSubmit = (fields) => {
 		let uniqueId =
@@ -21,6 +22,7 @@ export default function AddMember({
 		};
 
 		callbackUpdate(member);
+		postback();
 	};
 
 	const handleCancel = () => {
