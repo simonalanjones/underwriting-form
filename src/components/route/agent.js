@@ -1,4 +1,3 @@
-//import AgentFields from '../forms/agentFields';
 import AgentFields from '../views/forms/agentFields';
 import { hasMembership } from '../../services/membershipData';
 import { setAgent, getAgent } from '../../services/agentData';
@@ -22,8 +21,9 @@ export default function Agent({ postback }) {
 			email: fields.agentEmail,
 			dept: fields.agentDept,
 		};
-		postback();
+
 		setAgent(agent);
+		postback();
 		if (hasMembership()) {
 			navigate('/');
 		} else {

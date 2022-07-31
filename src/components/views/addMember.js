@@ -31,7 +31,7 @@ export default function AddMember({
 
 	return (
 		<>
-			<h6 className="pb-1">Add member</h6>
+			{/* <h6 className="pb-1">Add member</h6> */}
 			<MemberFields
 				handleCancel={handleCancel}
 				handleSubmit={handleSubmit}

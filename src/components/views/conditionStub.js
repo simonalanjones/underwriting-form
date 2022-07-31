@@ -22,7 +22,7 @@ function ConditionStub({ condition, handleDelete, member }) {
 				id={`deleteConditionModal${condition.id}`}
 			/>
 
-			<div className="border bg-white rounded px-4 pt-4 pb-4 mb-4 shadow-sm">
+			<div className="bg-white px-4 pt-4 pb-4 mb-4 shadow-sm">
 				<div className="d-flex justify-content-between">
 					<h6 className="card-title text-uppercase">{condition.condition}</h6>
 
@@ -37,7 +37,7 @@ function ConditionStub({ condition, handleDelete, member }) {
 					</button>
 
 					<ul
-						className="dropdown-menu text-small"
+						className="dropdown-menu dropdown-menu-end text-small"
 						aria-labelledby={`dropdownCondition${condition.id}`}
 					>
 						<li>

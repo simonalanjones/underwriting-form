@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getMembers, memberCount } from '../../services/memberData';
 import MemberListItem from './memberListItem';
 
@@ -21,16 +21,27 @@ function Memberlist() {
 		/>
 	));
 
+	const headingStyle = {
+		textTransform: 'uppercase',
+		fontSize: '0.85em',
+		letterSpacing: '1px',
+	};
+
 	return (
 		<>
 			{memberCount() > 0 && (
 				<>
-					<h6 className="pb-1">Members</h6>
-					<ul className="list-group shadow-sm">{memberList}</ul>
+					<div className="rounded shadow-sm bg-white pb-3 ">
+						<div className="pt-4">
+							<h6 className="pb-3 px-3" style={headingStyle}>
+								Members
+							</h6>
+						</div>
 
-					<div className="mt-4">
-						<Link to="/members/add" className="btn btn-secondary">
-							Add member
+						<ul className="list-group list-group-flush pb-4">{memberList}</ul>
+
+						<Link to="/members/add" className="mx-4 btn btn-sm btn-secondary">
+							Add
 						</Link>
 					</div>
 				</>

@@ -115,7 +115,7 @@ function MemberFields(props) {
 		<form
 			onSubmit={submitHandler}
 			ref={formRef}
-			className="needs-validation p-4 p-md-5 border rounded-3 bg-white shadow-sm"
+			className="needs-validation p-4 bg-white shadow-sm"
 			noValidate
 		>
 			<div className={'container'}>

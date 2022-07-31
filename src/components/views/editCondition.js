@@ -28,7 +28,7 @@ export default function EditCondition({
 
 	return (
 		<>
-			<h6 className="pb-1">Edit condition</h6>
+			{/* <h6 className="pb-1">Edit condition</h6> */}
 			<ConditionFields
 				data={condition}
 				handleCancel={handleCancel}

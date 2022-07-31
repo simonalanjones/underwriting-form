@@ -17,10 +17,8 @@ function MemberConditions({ member, deleteConditionCallback }) {
 			)}
 
 			{member.conditions.length === 0 && (
-				<div className="border bg-white rounded px-4 pt-4 mb-4 shadow-sm">
-					<p className="mb-4">
-						There are no conditions entered for this member.
-					</p>
+				<div className="bg-white px-4 pt-4 pb-1 shadow-sm">
+					<p className="mb-4">No conditions entered for this member.</p>
 				</div>
 			)}
 			{/* <div className="alert alert-warning" role="alert">

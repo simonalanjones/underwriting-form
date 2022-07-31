@@ -14,8 +14,8 @@ export default function MemberView({ member, callbackDeleteMember }) {
 				id={`deleteMemberModal${member.id}`}
 			/>
 
-			<h6 className="pb-1">Member</h6>
-			<div className="border bg-white rounded px-4 pt-4 pb-4 mb-4 shadow-sm">
+			{/* <h6 className="pb-1">Member</h6> */}
+			<div className="bg-white px-4 pt-4 pb-4 mb-4 shadow-sm">
 				<div className="row align-items-start">
 					<div className="col">&nbsp;</div>
 					<div className="col text-center">
@@ -40,7 +40,7 @@ export default function MemberView({ member, callbackDeleteMember }) {
 						</button>
 
 						<ul
-							className="dropdown-menu"
+							className="dropdown-menu dropdown-menu-end"
 							aria-labelledby={`dropdownMember${member.id}`}
 						>
 							<li>
@@ -59,6 +59,17 @@ export default function MemberView({ member, callbackDeleteMember }) {
 									data-bs-target={`#deleteMemberModal${member.id}`}
 								>
 									Delete member
+								</Link>
+							</li>
+							<li>
+								<hr className="dropdown-divider"></hr>
+							</li>
+							<li>
+								<Link
+									to={`/members/add-condition/${member.id}`}
+									className="dropdown-item"
+								>
+									Add condition
 								</Link>
 							</li>
 						</ul>

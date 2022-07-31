@@ -30,7 +30,7 @@ export default function AddCondition({
 
 	return (
 		<>
-			<h6 className="pb-1">Add condition</h6>
+			{/* <h6 className="pb-1">Add condition</h6> */}
 			<ConditionFields
 				handleCancel={handleCancel}
 				handleSubmit={handleSubmit}

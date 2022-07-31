@@ -22,7 +22,7 @@ export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 
 	return (
 		<>
-			<h6 className="pb-1">Edit member</h6>
+			{/* <h6 className="pb-1">Edit member</h6> */}
 			<MemberFields
 				data={member}
 				handleSubmit={handleSubmit}

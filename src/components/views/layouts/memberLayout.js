@@ -1,4 +1,4 @@
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import Navigation from '../navigation';
 import SubmitBar from '../submitBar';
 import Messages from '../../messages';
@@ -29,9 +29,6 @@ export default function MemberLayout({
 					<div className="col-4-lg col">
 						<div className="mb-5">
 							<MembershipInfo />
-							<Link to="/membership" className="btn btn-secondary mt-3">
-								Update
-							</Link>
 						</div>
 						<Memberlist />
 					</div>
@@ -44,7 +41,7 @@ export default function MemberLayout({
 
 			<footer className="footer py-3 mt-5">
 				<div className="container">
-					<p className="text-muted text-end">
+					<p className="text-muted text-start">
 						This is a demonstration application, no data will be sent on
 						submission.
 					</p>
