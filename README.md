@@ -1,6 +1,6 @@
 # Underwriting form / AXA Health
 
-This project is a demonstration of a multi-step ReactJS form.
+This project is my implementation of a multi-step ReactJS form.
 
 Step 1 - enter the agent's credentials (name and email address)  
 Step 2 - enter the high-level membership details of the transferring member  
