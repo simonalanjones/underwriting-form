@@ -6,6 +6,7 @@ import MembershipInfo from '../membershipInfo';
 import Memberlist from '../memberList';
 
 export default function MemberLayout({
+	progress,
 	callbackSubmitForm,
 	callbackClearForm,
 	messageState,
@@ -17,6 +18,7 @@ export default function MemberLayout({
 			<SubmitBar
 				submitCallback={callbackSubmitForm}
 				clearCallback={callbackClearForm}
+				progress={progress}
 			/>
 
 			<Messages

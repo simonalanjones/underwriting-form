@@ -19,15 +19,23 @@ export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 	const handleCancel = () => {
 		callbackCancel();
 	};
-
+	const headingStyle = {
+		textTransform: 'uppercase',
+		fontSize: '0.85em',
+		letterSpacing: '1px',
+	};
 	return (
 		<>
-			{/* <h6 className="pb-1">Edit member</h6> */}
-			<MemberFields
-				data={member}
-				handleSubmit={handleSubmit}
-				handleCancel={handleCancel}
-			/>
+			<div className="shadow-sm bg-white pt-3 px-5 bg-white border-top">
+				<h6 className="pb-4 mt-2" style={headingStyle}>
+					Edit member
+				</h6>
+				<MemberFields
+					data={member}
+					handleSubmit={handleSubmit}
+					handleCancel={handleCancel}
+				/>
+			</div>
 		</>
 	);
 }

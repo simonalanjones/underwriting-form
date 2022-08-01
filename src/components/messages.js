@@ -4,11 +4,7 @@ import { Toast as BootstrapToast } from 'bootstrap';
 
 export default function Messages({ messageState, callbackMessageDelete }) {
 	useEffect(() => {
-		const options = {
-			//animation: true,
-			//delay: 2500,
-			//autohide: false,
-		};
+		const options = {};
 
 		const toastElList = [].slice.call(document.querySelectorAll('.toast'));
 		toastElList.map(function (toastEl) {
@@ -21,7 +17,7 @@ export default function Messages({ messageState, callbackMessageDelete }) {
 	}, [callbackMessageDelete]);
 
 	return (
-		<div className="px-5">
+		<div className="toast-container position-fixed top-0 end-0 p-3">
 			{messageState.length > 0 &&
 				messageState.map((message, index) => (
 					<Toast key={message.id} id={message.id} body={message.body} />

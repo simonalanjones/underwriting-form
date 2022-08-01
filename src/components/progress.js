@@ -4,7 +4,7 @@ export default function Progress({ amount }) {
 	};
 
 	const styleHeight = {
-		height: '4px',
+		height: '3px',
 	};
 
 	return (

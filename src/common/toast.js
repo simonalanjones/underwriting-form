@@ -1,8 +1,6 @@
 export default function Toast(params) {
 	const id = params.id;
 	const body = params.body;
-	//const type = params.type;
-	//const delay = params.delay;
 
 	return (
 		<div
@@ -11,11 +9,10 @@ export default function Toast(params) {
 			aria-live="assertive"
 			aria-atomic="true"
 			id={id}
-			data-bs-delay="5000"
+			data-bs-delay="10000"
 		>
-			<div className="toast-header">
+			<div className="toast-header bg-primary text-white">
 				<strong className="me-auto">Notification</strong>
-				{/* <small>999 mins ago</small> */}
 				<button
 					type="button"
 					className="btn-close"

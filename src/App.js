@@ -23,12 +23,10 @@ import { submit } from './services/submit';
 
 const App = () => {
 	const [messageState, setMessageState] = useState([]);
-	//const [selectedMember, setSelectedMember] = useState(null);
 	const [progress, setProgress] = useState(1);
 
 	useEffect(() => {
 		updateProgress();
-		//console.log(progress);
 	});
 
 	function addMessage(messageText) {
@@ -43,9 +41,6 @@ const App = () => {
 	}
 
 	function updateProgress() {
-		// ******************************************
-		///// allow submit button if progress === 100
-
 		if (hasAgent()) {
 			setProgress(33);
 		}
@@ -77,10 +72,12 @@ const App = () => {
 	}
 
 	function postCallbackSubmitForm(status) {
-		//console.log('you got back!', status);
 		if (status === 404) {
 			addMessage('Your form failed to send. Please contact support');
 		} else if (status === 200) {
+			clearMembers();
+			clearMembership();
+			updateProgress();
 			addMessage('Your form has been submitted - no data was sent in the demo');
 		}
 	}

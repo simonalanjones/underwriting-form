@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 export default function MemberAdd({ postback }) {
 	const hasSubscriber = getMembers().some(
 		(element) => element.relation === 'Main subscriber'
-	); // **
+	);
 	const navigate = useNavigate();
 
 	function updateMembers(data) {
@@ -21,7 +21,6 @@ export default function MemberAdd({ postback }) {
 			callbackCancel={() => navigate('/')}
 			hasSubscriber={hasSubscriber}
 			postback={postback}
-			// pass in relation array based on above check **
 		/>
 	);
 }

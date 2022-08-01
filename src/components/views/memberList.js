@@ -31,9 +31,9 @@ function Memberlist() {
 		<>
 			{memberCount() > 0 && (
 				<>
-					<div className="rounded shadow-sm bg-white pb-3 ">
+					<div className="shadow-sm bg-white pb-3 border-top">
 						<div className="pt-4">
-							<h6 className="pb-3 px-3" style={headingStyle}>
+							<h6 className="pb-3 px-4" style={headingStyle}>
 								Members
 							</h6>
 						</div>

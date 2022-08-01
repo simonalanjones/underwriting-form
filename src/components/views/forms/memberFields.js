@@ -115,10 +115,10 @@ function MemberFields(props) {
 		<form
 			onSubmit={submitHandler}
 			ref={formRef}
-			className="needs-validation p-4 bg-white shadow-sm"
+			className="needs-validation"
 			noValidate
 		>
-			<div className={'container'}>
+			<div className={'pb-4'}>
 				<div className="mb-4">
 					<div className="row mb-4">
 						<div className="col">
