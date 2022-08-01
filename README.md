@@ -8,4 +8,4 @@ Step 3 - add at least one member's details
 
 **Note: No details are transmitted during the submit process! - this is a demo**
 
-[Demo link on Netlify:](https://graceful-tiramisu-e8d2e0.netlify.app/)
+[Working demo hosted on Netlify](https://graceful-tiramisu-e8d2e0.netlify.app/)
