@@ -13,7 +13,7 @@ step 4 - submit!
 
 I have attempted to structure the application in a style of Controller/View components.
 
-The main routing happens in App.js using React Router. All matched routes are 'dispatched' to a corresponding 'controller' component in _`src/components/route/`_
+The primary routing happens in App.js using React Router. All matched routes are 'dispatched' to a corresponding 'controller' component in _`src/components/route/`_
 
 Each route component will pass most of the presentation to a 'view' component in _`src/components/views/`_
 
