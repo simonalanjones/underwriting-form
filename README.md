@@ -11,7 +11,7 @@ step 4 - submit!
 
 ## About the application/folder structure
 
-I have structured the application in a style of Controller/View components.
+The application is structured in a style of Controller/View components.
 
 The primary routing happens in App.js using React Router. All matched routes are 'dispatched' to a corresponding 'controller' component in _`src/components/route/`_
 
