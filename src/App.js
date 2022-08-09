@@ -1,4 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import { useEffect, useState } from 'react';
 
 import RequireData from './common/requireData';
@@ -84,53 +86,58 @@ const App = () => {
 
 	return (
 		<>
-			<Progress amount={progress} />
-			<Routes>
-				<Route
-					element={
-						<Layout
-							progress={progress}
-							messageState={messageState}
-							callbackMessageDelete={callbackMessageDelete}
-						/>
-					}
-				>
-					<Route path="/" element={<Index />} />
-					<Route path="agent" element={<Agent postback={updateProgress} />} />
+			<Router>
+				<Progress amount={progress} />
+				<Routes>
 					<Route
-						path="membership"
-						element={<Membership postback={updateProgress} />}
-					/>
-				</Route>
-
-				<Route
-					path="members"
-					element={
-						<RequireData>
-							<MemberLayout
+						element={
+							<Layout
 								progress={progress}
-								callbackSubmitForm={callbackSubmitForm}
-								callbackClearForm={callbackClearForm}
 								messageState={messageState}
 								callbackMessageDelete={callbackMessageDelete}
 							/>
-						</RequireData>
-					}
-				>
-					<Route index element={<MemberIndex postback={updateProgress} />} />
-					<Route path="add" element={<MemberAdd postback={updateProgress} />} />
-					<Route path="edit/:member" element={<MemberEdit />} />
+						}
+					>
+						<Route path="/" element={<Index />} />
+						<Route path="agent" element={<Agent postback={updateProgress} />} />
+						<Route
+							path="membership"
+							element={<Membership postback={updateProgress} />}
+						/>
+					</Route>
+
 					<Route
-						path="view/:member"
-						element={<MemberView postback={updateProgress} />}
-					/>
-					<Route path="add-condition/:member" element={<ConditionAdd />} />
-					<Route
-						path="edit-condition/:condition/:member"
-						element={<ConditionEdit />}
-					/>
-				</Route>
-			</Routes>
+						path="members"
+						element={
+							<RequireData>
+								<MemberLayout
+									progress={progress}
+									callbackSubmitForm={callbackSubmitForm}
+									callbackClearForm={callbackClearForm}
+									messageState={messageState}
+									callbackMessageDelete={callbackMessageDelete}
+								/>
+							</RequireData>
+						}
+					>
+						<Route index element={<MemberIndex postback={updateProgress} />} />
+						<Route
+							path="add"
+							element={<MemberAdd postback={updateProgress} />}
+						/>
+						<Route path="edit/:member" element={<MemberEdit />} />
+						<Route
+							path="view/:member"
+							element={<MemberView postback={updateProgress} />}
+						/>
+						<Route path="add-condition/:member" element={<ConditionAdd />} />
+						<Route
+							path="edit-condition/:condition/:member"
+							element={<ConditionEdit />}
+						/>
+					</Route>
+				</Routes>
+			</Router>
 		</>
 	);
 };

@@ -6,13 +6,14 @@ const RadioOptions = ({
 	options,
 	checkedItem,
 	required,
+	className,
 }) => {
 	return (
 		<>
 			{options.map((item, index) => (
 				<div key={index} className="form-check">
 					<input
-						className="form-check-input"
+						className={className}
 						type="radio"
 						name={name}
 						id={name + item}
