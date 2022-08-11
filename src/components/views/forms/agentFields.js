@@ -5,66 +5,133 @@ function AgentFields(props) {
 	const formRef = useRef();
 	const handleCancel = props.handleCancel;
 	const handleSubmit = props.handleSubmit;
-	// can we pass our own in for testing purposes
-	// and then verify in tests that the buttons work?!
-	// can test editing of field using test data
-	// can test class changes if incorrect data submitted
 
 	const [fields, setFields] = useState({
 		agentName: {
 			name: 'agentName',
+			type: 'input',
 			class: 'form-control',
 			error: '',
-			tvalue: props.data.name !== undefined ? props.data.name : '',
+			tvalue: '',
 		},
 		agentEmail: {
 			name: 'agentEmail',
+			type: 'input',
 			class: 'form-control',
 			error: '',
-			tvalue: props.data.email !== undefined ? props.data.email : '',
+			tvalue: '',
 		},
 		agentDept: {
 			name: 'agentDept',
+			type: 'radio',
 			class: 'form-check-input',
 			error: '',
-			tvalue: props.data.dept !== undefined ? props.data.dept : '',
+			tvalue: '',
 		},
 	});
 
+	const [populated, setPopulated] = useState(false);
 	const [submitted, setSubmitted] = useState(false);
+	const [isValid, setIsValid] = useState(false);
 
-	const validateField = (fieldName, fieldValue) => {
-		switch (fieldName) {
-			case 'agentName':
-				// multiple rules - required field, greater than 5 chars etc
-				const agentNameValid =
-					fieldValue !== undefined && fieldValue.length > 2;
-				return agentNameValid ? null : 'too short agent name';
+	// prepopulate form fields if data passed
+	useEffect(() => {
+		if (
+			props.data !== undefined &&
+			Object.keys(props.data).length > 0 &&
+			populated === false
+		) {
+			const _fields = {};
+			for (const [fieldName, fieldValue] of Object.entries(fields)) {
+				const updatedField = {
+					...fieldValue,
+					tvalue: props.data[fieldName],
+				};
 
-			case 'agentEmail':
-				const agentEmailValid =
-					fieldValue !== undefined && fieldValue.length > 5;
-				return agentEmailValid ? null : 'too short agent email';
+				_fields[fieldName] = updatedField;
+			}
 
-			case 'agentDept':
-				const agentDeptValid =
-					fieldValue !== undefined && fieldValue !== null && fieldValue !== '';
-				return agentDeptValid ? null : 'agent dept is required';
-
-			default:
-				console.log('waaaat?');
-				return null;
+			setPopulated(true);
+			setFields(_fields);
 		}
-	};
+	}, [fields, props.data, populated]);
+
+	useEffect(() => {
+		if (submitted === true && isValid === true) {
+			const agent = {
+				agentName: fields.agentName.tvalue,
+				agentEmail: fields.agentEmail.tvalue,
+				agentDept: fields.agentDept.tvalue,
+			};
+
+			handleSubmit(agent);
+		}
+	}, [submitted, isValid, fields, handleSubmit]);
 
 	const submitForm = () => {
+		validateForm();
 		setSubmitted(true);
-		let _fields = {};
+	};
+
+	const validateForm = () => {
+		const validateField = (fieldName, fieldValue) => {
+			switch (fieldName) {
+				case 'agentName':
+					// multiple rules - required field, greater than 5 chars etc
+					const agentNameValid =
+						fieldValue !== undefined && fieldValue.length > 2;
+					return agentNameValid ? null : 'too short agent name';
+
+				case 'agentEmail':
+					const agentEmailValid =
+						fieldValue !== undefined && fieldValue.length > 5;
+					return agentEmailValid ? null : 'too short agent email';
+
+				case 'agentDept':
+					const agentDeptValid =
+						fieldValue !== undefined &&
+						fieldValue !== null &&
+						fieldValue !== '';
+					return agentDeptValid ? null : 'agent dept is required';
+
+				default:
+					console.log('unknown fieldname:', fieldName);
+					return null;
+			}
+		};
+
+		// helper
+		const classForFieldType = (field) => {
+			if (field === 'radio') {
+				return 'form-check-input';
+			} else if (field === 'input') {
+				return 'form-control';
+			}
+		};
+
+		let _isValid = true;
+		const _fields = {};
 		for (const [fieldName, fieldValue] of Object.entries(fields)) {
-			const errorMessage = validateField(fieldName, fieldValue.tvalue);
-			const updatedField = { ...fieldValue, error: errorMessage };
+			const error = validateField(fieldName, fieldValue.tvalue);
+
+			let fieldClass;
+			const ftype = classForFieldType(fields[fieldName].type);
+
+			if (error) {
+				fieldClass = `${ftype} is-invalid`;
+				_isValid = false;
+			} else {
+				fieldClass = `${ftype} is-valid`;
+			}
+
+			const updatedField = {
+				...fieldValue,
+				error: error,
+				class: fieldClass,
+			};
 			_fields[fieldName] = updatedField;
 		}
+		setIsValid(_isValid);
 		setFields(_fields);
 	};
 
@@ -74,19 +141,6 @@ function AgentFields(props) {
 		setFields({ ..._fields });
 	};
 
-	// todo: this gets called every key press, convert to side-effect?
-	const fieldClassFor = (field) => {
-		if (submitted === false) {
-			return fields[field].class;
-		} else {
-			if (fields[field].error) {
-				return `${fields[field].class} is-invalid`;
-			} else {
-				return `${fields[field].class} is-valid`;
-			}
-		}
-	};
-
 	// Handle inital submit, checking validation
 	// before passing up to submit in parent component
 	function submitHandler(event) {
@@ -94,30 +148,6 @@ function AgentFields(props) {
 		event.stopPropagation();
 		submitForm();
 	}
-
-	useEffect(() => {
-		if (submitted === true) {
-			if (
-				!fields.agentName.error &&
-				!fields.agentEmail.error &&
-				!fields.agentDept.error
-			) {
-				const submitFields = {
-					agentName: fields.agentName.tvalue,
-					agentEmail: fields.agentEmail.tvalue,
-					agentDept: fields.agentDept.tvalue,
-				};
-				handleSubmit(submitFields);
-			}
-		}
-	}, [
-		submitted,
-		fields.agentName.error,
-		fields.agentEmail.error,
-		fields.agentDept.error,
-		fields,
-		handleSubmit,
-	]);
 
 	const style = {
 		width: '100%',
@@ -141,7 +171,7 @@ function AgentFields(props) {
 				<input
 					type="input"
 					name="agentName"
-					className={fieldClassFor('agentName')}
+					className={fields.agentName.class}
 					id="agentName"
 					value={fields.agentName.tvalue}
 					onChange={handleChange}
@@ -165,7 +195,7 @@ function AgentFields(props) {
 				<input
 					type="input"
 					name="agentEmail"
-					className={fieldClassFor('agentEmail')}
+					className={fields.agentEmail.class}
 					id="agentEmail"
 					value={fields.agentEmail.tvalue}
 					onChange={handleChange}
@@ -193,7 +223,8 @@ function AgentFields(props) {
 						options={['Retention', 'Acquisition']}
 						checkedItem={fields.agentDept.tvalue}
 						required={true}
-						className={fieldClassFor('agentDept')}
+						className={fields.agentDept.class}
+						errorMessage={fields.agentDept.error}
 					/>
 				</div>
 			</div>
