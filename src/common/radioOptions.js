@@ -7,6 +7,7 @@ const RadioOptions = ({
 	checkedItem,
 	required,
 	className,
+	errorMessage,
 }) => {
 	return (
 		<>
@@ -25,8 +26,14 @@ const RadioOptions = ({
 					<label className="form-check-label" htmlFor={name + item}>
 						{item}
 					</label>
-					{index === options.length - 1 && (
-						<div className="invalid-feedback"> Please choose an option</div>
+
+					{index === options.length - 1 && errorMessage && (
+						<div
+							data-testid="invalid-feedback-agent-dept"
+							className="invalid-feedback"
+						>
+							{errorMessage}
+						</div>
 					)}
 				</div>
 			))}

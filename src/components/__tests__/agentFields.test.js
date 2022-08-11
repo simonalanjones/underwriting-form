@@ -2,13 +2,19 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AgentFields from '../views/forms/agentFields';
 
-const testSubmit = () => {
-	return 'submit pressed';
+const mockSubmit = jest.fn().mockName('testSubmit');
+const mockCancel = jest.fn().mockName('testCancel');
+
+const agentData = {
+	agentName: 'John Doe',
+	agentEmail: 'John@doe.net',
+	agentDept: 'Retention',
 };
 
-test('renders the agent inputs', () => {
+const radioOptions = ['Retention', 'Acquisition'];
+
+test('renders all agent form fields', () => {
 	render(<AgentFields />);
-	// screen.debug();
 	expect(screen.getByLabelText('Agent name')).toBeInTheDocument();
 	expect(screen.getByLabelText('Agent email')).toBeInTheDocument();
 	expect(screen.getByLabelText('Retention')).toBeInTheDocument();
@@ -16,43 +22,82 @@ test('renders the agent inputs', () => {
 	expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument();
 });
 
-test('can type in form fields and select radio options', () => {
-	render(<AgentFields />);
+test('renders form and prepopulate fields', () => {
+	render(<AgentFields data={agentData} />);
+
 	const agentNameInput = screen.getByLabelText('Agent name');
-	userEvent.type(agentNameInput, 'Simon A Jones');
-	expect(agentNameInput.value).toBe('Simon A Jones');
+	expect(agentNameInput).toHaveValue(agentData.agentName);
 
 	const agentEmailInput = screen.getByLabelText('Agent email');
-	userEvent.type(agentEmailInput, 'simonajones@gmail.com');
-	expect(agentEmailInput.value).toBe('simonajones@gmail.com');
+	expect(agentEmailInput).toHaveValue(agentData.agentEmail);
 
-	const radioRetentionInput = screen.getByLabelText('Retention');
+	const agentDeptInput = screen.getByLabelText(agentData.agentDept);
+	expect(agentDeptInput).toBeChecked();
+});
+
+test('can type into each form field and select each radio option', () => {
+	render(<AgentFields />);
+
+	const agentNameInput = screen.getByLabelText('Agent name');
+	userEvent.type(agentNameInput, agentData.agentName);
+	expect(agentNameInput.value).toBe(agentData.agentName);
+
+	const agentEmailInput = screen.getByLabelText('Agent email');
+	userEvent.type(agentEmailInput, agentData.agentEmail);
+	expect(agentEmailInput.value).toBe(agentData.agentEmail);
+
+	const radioRetentionInput = screen.getByLabelText(radioOptions[0]);
 	userEvent.click(radioRetentionInput);
 	expect(radioRetentionInput).toBeChecked();
 
-	const radioAcquisitionInput = screen.getByLabelText('Acquisition');
+	const radioAcquisitionInput = screen.getByLabelText(radioOptions[1]);
 	userEvent.click(radioAcquisitionInput);
 	expect(radioAcquisitionInput).toBeChecked();
 });
 
-test('will show errors if submitting incomplete form', () => {
+test('shows errors if submitting incomplete form', () => {
 	render(<AgentFields />);
-	screen.debug();
 
-	let feedback = screen.getByTestId('invalid-feedback-agent-name');
-	expect(feedback).not.toBeVisible();
-	// console.log(window.getComputedStyle(feedback).getPropertyValue('display'));
-	// //expect(feedback).toHaveStyle({ display: 'none' });
+	const agentNameInput = screen.queryByTestId('invalid-feedback-agent-name');
+	expect(agentNameInput).not.toBeInTheDocument();
 
-	// //console.log(feedback);
-	// const submitButton = screen.getByRole('button', { name: 'Submit' });
+	const agentEmailInput = screen.queryByTestId('invalid-feedback-agent-email');
+	expect(agentEmailInput).not.toBeInTheDocument();
 
-	// userEvent.click(submitButton);
-	// let feedback2 = screen.getByTestId('invalid-feedback-agent-name');
-	// console.log(window.getComputedStyle(feedback2).getPropertyValue('display'));
+	const agentDeptInput = screen.queryByTestId('invalid-feedback-agent-dept');
+	expect(agentDeptInput).not.toBeInTheDocument();
 
-	// let feedback2 = screen.getByTestId('invalid-feedback-agent-name');
+	const submitButton = screen.getByRole('button', { name: 'Submit' });
+	userEvent.click(submitButton);
 
-	// expect(feedback2).toHaveStyle({ display: 'block' });
-	//screen.debug();
+	const errorAgentNameId = screen.getByTestId('invalid-feedback-agent-name');
+	expect(errorAgentNameId).toBeInTheDocument();
+
+	const errorAgentEmailId = screen.getByTestId('invalid-feedback-agent-email');
+	expect(errorAgentEmailId).toBeInTheDocument();
+
+	const errorAgentDeptId = screen.getByTestId('invalid-feedback-agent-dept');
+	expect(errorAgentDeptId).toBeInTheDocument();
+});
+
+test('can successfully submit form', () => {
+	render(<AgentFields data={agentData} handleSubmit={mockSubmit} />);
+
+	const submitButton = screen.getByRole('button', { name: 'Update' });
+	userEvent.click(submitButton);
+	expect(mockSubmit).toHaveBeenCalledWith(agentData);
+});
+
+test('can use form cancel button', () => {
+	render(
+		<AgentFields
+			data={agentData}
+			handleSubmit={mockSubmit}
+			handleCancel={mockCancel}
+		/>
+	);
+
+	const cancelButton = screen.getByRole('button', { name: 'Cancel' });
+	userEvent.click(cancelButton);
+	expect(mockCancel).toHaveBeenCalled();
 });

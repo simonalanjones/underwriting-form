@@ -16,13 +16,7 @@ export default function Agent({ postback }) {
 	};
 
 	const handleSubmit = (fields) => {
-		const agent = {
-			name: fields.agentName,
-			email: fields.agentEmail,
-			dept: fields.agentDept,
-		};
-
-		setAgent(agent);
+		setAgent(fields);
 		postback();
 		if (hasMembership()) {
 			navigate('/');
