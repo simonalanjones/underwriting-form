@@ -1,8 +1,14 @@
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 
-export default function DependantCheck({ callback }) {
+export default function DependantCheck({ callback, checked }) {
 	const checkbox1 = useRef();
 	const checkbox2 = useRef();
+
+	// can pre-check the checkboxes if in checked param
+	useEffect(() => {
+		checkbox1.current.checked = checked;
+		checkbox2.current.checked = checked;
+	}, [checked]);
 
 	// return a truth value based on both checkboxes checked
 	const handleChange = (e) => {
@@ -20,6 +26,7 @@ export default function DependantCheck({ callback }) {
 				type="checkbox"
 				className="form-check-input"
 				onChange={handleChange}
+				data-testid="firstDisclaimerCheckboxDependant"
 			/>
 			<br />
 			Do you have full knowledge of their medical history?&nbsp;
@@ -28,6 +35,7 @@ export default function DependantCheck({ callback }) {
 				type="checkbox"
 				className="form-check-input"
 				onChange={handleChange}
+				data-testid="secondDisclaimerCheckboxDependant"
 			/>
 			<br />
 		</div>

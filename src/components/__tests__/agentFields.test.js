@@ -1,11 +1,11 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AgentFields from '../views/forms/agentFields';
 
 const mockSubmit = jest.fn().mockName('testSubmit');
 const mockCancel = jest.fn().mockName('testCancel');
 
-const agentData = {
+const testData = {
 	agentName: 'John Doe',
 	agentEmail: 'John@doe.net',
 	agentDept: 'Retention',
@@ -13,91 +13,141 @@ const agentData = {
 
 const radioOptions = ['Retention', 'Acquisition'];
 
+const validationMessages = {
+	agentName: {
+		required: 'Agent Name required',
+	},
+	agentEmail: {
+		required: 'Agent Email required',
+		invalid: 'Invalid email address',
+	},
+	agentDept: {
+		required: 'Agent Dept required',
+	},
+};
+
+// helper functions to retrieve commonly referenced elements
+
+const agentNameField = () => screen.getByLabelText('Agent name');
+const agentEmailField = () => screen.getByLabelText('Agent email');
+const retentionField = () => screen.getByLabelText('Retention');
+const acquisitionField = () => screen.getByLabelText('Acquisition');
+//const agentDeptInput = () => screen.getByLabelText(testData.agentDept);
+const submitButton = () => screen.getByRole('button', { name: 'Submit' });
+
+// tests begin
+
 test('renders all agent form fields', () => {
 	render(<AgentFields />);
-	expect(screen.getByLabelText('Agent name')).toBeInTheDocument();
-	expect(screen.getByLabelText('Agent email')).toBeInTheDocument();
-	expect(screen.getByLabelText('Retention')).toBeInTheDocument();
-	expect(screen.getByLabelText('Acquisition')).toBeInTheDocument();
-	expect(screen.getByRole('button', { name: 'Submit' })).toBeInTheDocument();
+
+	expect(agentNameField()).toBeInTheDocument();
+	expect(agentEmailField()).toBeInTheDocument();
+	expect(retentionField()).toBeInTheDocument();
+	expect(acquisitionField()).toBeInTheDocument();
+	expect(submitButton()).toBeInTheDocument();
 });
 
 test('renders form and prepopulate fields', () => {
-	render(<AgentFields data={agentData} />);
+	render(<AgentFields data={testData} />);
 
-	const agentNameInput = screen.getByLabelText('Agent name');
-	expect(agentNameInput).toHaveValue(agentData.agentName);
-
-	const agentEmailInput = screen.getByLabelText('Agent email');
-	expect(agentEmailInput).toHaveValue(agentData.agentEmail);
-
-	const agentDeptInput = screen.getByLabelText(agentData.agentDept);
+	const agentDeptInput = screen.getByLabelText(testData.agentDept);
+	expect(agentNameField()).toHaveValue(testData.agentName);
+	expect(agentEmailField()).toHaveValue(testData.agentEmail);
 	expect(agentDeptInput).toBeChecked();
 });
 
-test('can type into each form field and select each radio option', () => {
+test('can type into each form field and select each radio option', async () => {
 	render(<AgentFields />);
+	const user = userEvent.setup();
 
 	const agentNameInput = screen.getByLabelText('Agent name');
-	userEvent.type(agentNameInput, agentData.agentName);
-	expect(agentNameInput.value).toBe(agentData.agentName);
-
 	const agentEmailInput = screen.getByLabelText('Agent email');
-	userEvent.type(agentEmailInput, agentData.agentEmail);
-	expect(agentEmailInput.value).toBe(agentData.agentEmail);
 
-	const radioRetentionInput = screen.getByLabelText(radioOptions[0]);
-	userEvent.click(radioRetentionInput);
-	expect(radioRetentionInput).toBeChecked();
+	await user.type(agentNameInput, testData.agentName);
+	await waitFor(() => expect(agentNameInput.value).toBe(testData.agentName));
 
-	const radioAcquisitionInput = screen.getByLabelText(radioOptions[1]);
-	userEvent.click(radioAcquisitionInput);
-	expect(radioAcquisitionInput).toBeChecked();
+	await user.type(agentEmailInput, testData.agentEmail);
+	await waitFor(() => expect(agentEmailInput.value).toBe(testData.agentEmail));
+
+	for (let i = 0; i < radioOptions.length; i++) {
+		const switchFromInput = screen.getByLabelText(radioOptions[i]);
+		await user.click(switchFromInput);
+		await waitFor(() => expect(switchFromInput).toBeChecked());
+	}
 });
 
-test('shows errors if submitting incomplete form', () => {
+test('shows errors if entering invalid email address', async () => {
 	render(<AgentFields />);
+	const user = userEvent.setup();
+	// type an invalid email address
+	await user.type(agentEmailField(), 'invalid@EmailAddress');
+	// select another element in the form (cause onBlur event on email)
+	await user.click(agentNameField());
+	// verify email error message appears
+	expect(
+		screen.getByText(validationMessages.agentEmail.invalid)
+	).toBeInTheDocument();
+});
 
-	const agentNameInput = screen.queryByTestId('invalid-feedback-agent-name');
-	expect(agentNameInput).not.toBeInTheDocument();
+test('shows errors if submitting incomplete form', async () => {
+	render(<AgentFields />);
+	const user = userEvent.setup();
 
-	const agentEmailInput = screen.queryByTestId('invalid-feedback-agent-email');
-	expect(agentEmailInput).not.toBeInTheDocument();
+	// verify error messages not present on intial render
+	expect(
+		screen.queryByText(validationMessages.agentName.required)
+	).not.toBeInTheDocument();
 
-	const agentDeptInput = screen.queryByTestId('invalid-feedback-agent-dept');
-	expect(agentDeptInput).not.toBeInTheDocument();
+	expect(
+		screen.queryByText(validationMessages.agentEmail.required)
+	).not.toBeInTheDocument();
+
+	expect(
+		screen.queryByText(validationMessages.agentDept.required)
+	).not.toBeInTheDocument();
+
+	// submit form without completing any fields
+	const submitButton = screen.getByRole('button', { name: 'Submit' });
+	await waitFor(() => user.click(submitButton));
+
+	// verify error messages are now present
+	const agentNameErrorText = await screen.findByText(
+		validationMessages.agentName.required
+	);
+	expect(agentNameErrorText).toBeInTheDocument();
+
+	const agentEmailErrorText = await screen.findByText(
+		validationMessages.agentEmail.required
+	);
+	expect(agentEmailErrorText).toBeInTheDocument();
+
+	const agentDeptErrorText = await screen.findByText(
+		validationMessages.agentDept.required
+	);
+	expect(agentDeptErrorText).toBeInTheDocument();
+});
+
+test('can successfully submit form', async () => {
+	render(<AgentFields data={testData} handleSubmit={mockSubmit} />);
+	const user = userEvent.setup();
 
 	const submitButton = screen.getByRole('button', { name: 'Submit' });
-	userEvent.click(submitButton);
+	await user.click(submitButton);
 
-	const errorAgentNameId = screen.getByTestId('invalid-feedback-agent-name');
-	expect(errorAgentNameId).toBeInTheDocument();
-
-	const errorAgentEmailId = screen.getByTestId('invalid-feedback-agent-email');
-	expect(errorAgentEmailId).toBeInTheDocument();
-
-	const errorAgentDeptId = screen.getByTestId('invalid-feedback-agent-dept');
-	expect(errorAgentDeptId).toBeInTheDocument();
+	expect(mockSubmit).toHaveBeenCalledWith(testData);
 });
 
-test('can successfully submit form', () => {
-	render(<AgentFields data={agentData} handleSubmit={mockSubmit} />);
-
-	const submitButton = screen.getByRole('button', { name: 'Update' });
-	userEvent.click(submitButton);
-	expect(mockSubmit).toHaveBeenCalledWith(agentData);
-});
-
-test('can use form cancel button', () => {
+test('can use form cancel button', async () => {
 	render(
 		<AgentFields
-			data={agentData}
+			data={testData}
 			handleSubmit={mockSubmit}
 			handleCancel={mockCancel}
 		/>
 	);
+	const user = userEvent.setup();
 
 	const cancelButton = screen.getByRole('button', { name: 'Cancel' });
-	userEvent.click(cancelButton);
+	await user.click(cancelButton);
 	expect(mockCancel).toHaveBeenCalled();
 });

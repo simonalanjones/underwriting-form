@@ -1,12 +1,34 @@
-import React, { useState, useEffect, useRef } from 'react';
-import SelectOptions from '../../../common/selectOptions';
+import { useState, useEffect } from 'react';
+import { Formik, Form, useFormikContext } from 'formik';
+import * as Yup from 'yup';
 import DependantCheck from '../dependantCheck';
 import SubscriberCheck from '../subscriberCheck';
+import TextInput from '../../forms/textInput';
+import SelectOptions from '../../forms/selectOptions';
 
 function MemberFields(props) {
-	const formRef = useRef();
-	const submitRef = useRef();
-	const firstnameInput = useRef();
+	const [formRelation, setFormRelation] = useState('');
+	const [disclaimerChecked, setDisclaimerChecked] = useState(false);
+
+	// used to track whether we are inputting a subscriber or dependant
+	// the disclosure box will appear based on this value
+	// as Formik change handler is already taken, we will observe the value changes
+	const FormObserver = () => {
+		const { values } = useFormikContext();
+		useEffect(() => {
+			// used to track changes in the relation field
+			if (formRelation !== values.relation) {
+				if (values.relation === '') {
+					setFormRelation('');
+				} else {
+					setFormRelation(
+						values.relation === 'Main subscriber' ? 'subscriber' : 'dependant'
+					);
+				}
+			}
+		}, [values]);
+		return null;
+	};
 
 	let relationOptions = [
 		'Main subscriber',
@@ -25,237 +47,124 @@ function MemberFields(props) {
 		);
 	}
 
+	let titleOptions = ['Mr', 'Mrs', 'Miss', 'Master', 'Other'];
+
+	const initialValues =
+		props.data !== undefined && Object.keys(props.data).length > 0
+			? props.data
+			: {
+					userFirstName: '',
+					userLastName: '',
+					relation: '',
+					title: '',
+					phoneNumber: '',
+					dateOfBirth: '',
+			  };
+
+	useEffect(() => {
+		if (initialValues.userFirstName !== '') {
+			enableSubmit(true);
+		}
+		//initialValues.userFirstName !== '' && setDisclaimerChecked(true);
+	}, [initialValues.userFirstName]);
+
 	const handleCancel = props.handleCancel;
 	const handleSubmit = props.handleSubmit;
-
-	const [fields, setFields] = useState({
-		userFirstName: '',
-		userLastName: '',
-		relation: '',
-		title: '',
-		phoneNumber: '',
-		dateOfBirth: '',
-	});
-
-	const [formRelation, setFormRelation] = useState('');
-	const [disclaimerChecked, setDisclaimerChecked] = useState(false);
 
 	function enableSubmit(state) {
 		setDisclaimerChecked(state);
 	}
 
-	// Handle inital submit, checking validation
-	// before passing up to submit in parent component
-	function submitHandler(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		formRef.current.classList.add('was-validated');
-		if (formRef.current.checkValidity()) {
-			/* callback passed through parent component props */
-			handleSubmit(fields);
-		}
-	}
-
-	useEffect(() => {
-		if (!props.data) {
-			firstnameInput.current.focus();
-		}
-	}, [props]);
-
-	// handle incoming prop data, one-time use
-	useEffect(() => {
-		if (props.data) {
-			setFields({
-				userFirstName: props.data.userFirstName,
-				userLastName: props.data.userLastName,
-				relation: props.data.relation,
-				title: props.data.title,
-				phoneNumber: props.data.phoneNumber,
-				dateOfBirth: props.data.dateOfBirth,
-			});
-
-			// repop the selected relation in state
-			// if (props.data.relation === 'Main subscriber') {
-			// 	setFormRelation('subscriber');
-			// } else {
-			// 	setFormRelation('dependant');
-			// }
-			setDisclaimerChecked(true);
-		}
-	}, [props.data]);
-
-	useEffect(() => {
-		if (formRelation !== '') {
-			setDisclaimerChecked(false);
-		}
-	}, [formRelation]);
-
-	const handleChange = (e) => {
-		setFields({
-			...fields,
-			[e.target.name]: e.target.value,
-		});
-
-		// if we change the relation dropdown,
-		// update the state so the relevant disclaimer
-		// checks are shown before submit is enabled
-		if (e.target.name === 'relation') {
-			const input = e.target.value;
-			if (input === '') {
-				setFormRelation('');
-			} else if (input === 'Main subscriber') {
-				setFormRelation('subscriber');
-			} else {
-				setFormRelation('dependant');
-			}
-		}
-	};
+	// useEffect(() => {
+	// 	if (!props.data) {
+	// 		firstnameInput.current.focus();
+	// 	}
+	// }, [props]);
 
 	return (
-		<form
-			onSubmit={submitHandler}
-			ref={formRef}
-			className="needs-validation"
-			noValidate
+		<Formik
+			initialValues={initialValues}
+			validationSchema={Yup.object({
+				userFirstName: Yup.string().required('First name required'),
+				userLastName: Yup.string().required('Last name required'),
+				relation: Yup.string()
+					.oneOf(relationOptions, 'Invalid relation')
+					.required('Relation required'),
+				title: Yup.string()
+					.oneOf(titleOptions, 'Invalid title')
+					.required('Title required'),
+				phoneNumber: Yup.string(),
+				dateOfBirth: Yup.date().required('Date of birth required'),
+			})}
+			onSubmit={(values, { setSubmitting }) => {
+				handleSubmit(values);
+			}}
 		>
-			<div className={'pb-4'}>
-				<div className="mb-4">
+			<Form>
+				<FormObserver />
+				<div className={'pb-4 mb-4'}>
 					<div className="row mb-4">
 						<div className="col">
-							<label htmlFor="userFirstName" className="form-label">
-								First name
-							</label>
-
-							<input
-								ref={firstnameInput}
-								type="input"
-								name="userFirstName"
-								maxLength="25"
-								className="form-control"
-								id="firstName"
-								value={fields.userFirstName}
-								onChange={handleChange}
-								required
-							/>
-							<div className="invalid-feedback">
-								Please enter member firstname
-							</div>
+							<TextInput label="First name" name="userFirstName" type="text" />
 						</div>
 						<div className="col">
-							<label htmlFor="userLastName" className="form-label">
-								Last name
-							</label>
-
-							<input
-								type="input"
-								name="userLastName"
-								maxLength="25"
-								className="form-control"
-								id="userLastName"
-								value={fields.userLastName}
-								onChange={handleChange}
-								required
-							/>
-
-							<div className="invalid-feedback">
-								Please enter member lastname.
-							</div>
+							<TextInput label="Last name" name="userLastName" type="text" />
 						</div>
 					</div>
-
 					<div className="mb-4">
 						<div className="row mb-4">
 							<div className="col">
-								<label htmlFor="relation" className="form-label">
-									Relation
-								</label>
-
 								<SelectOptions
 									name="relation"
+									label="Relation"
 									id="relation"
-									changeHandler={handleChange}
-									selected={fields.relation}
 									options={relationOptions}
-									required={true}
 								/>
-								<div className="invalid-feedback">
-									Please select member relation
-								</div>
 							</div>
 							<div className="col">
-								<label htmlFor="title" className="form-label">
-									Title
-								</label>
-
 								<SelectOptions
 									name="title"
+									label="Title"
 									id="title"
-									changeHandler={handleChange}
-									selected={fields.title}
-									options={['Mr', 'Mrs', 'Miss', 'Master', 'Other']}
-									required={true}
+									options={titleOptions}
 								/>
-								<div className="invalid-feedback">
-									Please select member title
-								</div>
 							</div>
 						</div>
 					</div>
-
 					<div className="row mb-4">
 						<div className="col">
-							<label htmlFor="dateOfBirth" className="form-label">
-								Date of Birth
-							</label>
-
-							<input
-								type="date"
-								name="dateOfBirth"
-								className="form-control"
-								id="dateOfBirth"
-								value={fields.dateOfBirth}
-								onChange={handleChange}
-								required
-							/>
+							<TextInput label="Date of Birth" name="dateOfBirth" type="date" />
 						</div>
-
 						<div className="col">
-							<label htmlFor="phoneNumber" className="form-label">
-								Telephone No.
-							</label>
-
-							<input
-								type="input"
-								name="phoneNumber"
-								className="form-control"
-								maxLength="25"
-								id="phoneNumber"
-								value={fields.phoneNumber}
-								onChange={handleChange}
-							/>
+							<TextInput label="Telephone No." name="phoneNumber" type="text" />
 						</div>
 					</div>
+					{formRelation === 'subscriber' && (
+						<SubscriberCheck
+							callback={enableSubmit}
+							checked={disclaimerChecked}
+						/>
+					)}
+					{formRelation === 'dependant' && (
+						<DependantCheck
+							callback={enableSubmit}
+							checked={disclaimerChecked}
+						/>
+					)}
+					<button
+						type="submit"
+						className="btn btn-primary"
+						disabled={!disclaimerChecked}
+					>
+						{!props.data ? 'Submit' : 'Update'}
+					</button>
+					&nbsp;
+					<button onClick={handleCancel} className="btn btn-secondary">
+						Cancel
+					</button>
 				</div>
-				{formRelation === 'subscriber' && (
-					<SubscriberCheck callback={enableSubmit} />
-				)}
-				{formRelation === 'dependant' && (
-					<DependantCheck callback={enableSubmit} />
-				)}
-				<button
-					ref={submitRef}
-					type="submit"
-					className="btn btn-primary"
-					disabled={!disclaimerChecked}
-				>
-					{!props.data ? 'Submit' : 'Update'}
-				</button>
-				&nbsp;
-				<button onClick={handleCancel} className="btn btn-secondary">
-					Cancel
-				</button>
-			</div>
-		</form>
+			</Form>
+		</Formik>
 	);
 }
 
