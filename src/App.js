@@ -22,7 +22,6 @@ import { hasAgent } from './services/agentData';
 import { getMembership } from './services/membershipData';
 import { memberCount } from './services/memberData';
 import { submit } from './services/submit';
-import SignupForm from './components/route/signUp';
 
 const App = () => {
 	const [messageState, setMessageState] = useState([]);
@@ -91,7 +90,6 @@ const App = () => {
 				<Progress amount={progress} />
 
 				<Routes>
-					<Route path="signup" element={<SignupForm />} />
 					<Route
 						element={
 							<Layout

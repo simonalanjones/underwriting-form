@@ -103,39 +103,39 @@ function MemberFields(props) {
 			<Form>
 				<FormObserver />
 				<div className={'pb-4 mb-4'}>
-					<div className="row mb-4">
-						<div className="col">
+					<div className="row">
+						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
 							<TextInput label="First name" name="userFirstName" type="text" />
 						</div>
-						<div className="col">
+						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
 							<TextInput label="Last name" name="userLastName" type="text" />
 						</div>
 					</div>
-					<div className="mb-4">
-						<div className="row mb-4">
-							<div className="col">
-								<SelectOptions
-									name="relation"
-									label="Relation"
-									id="relation"
-									options={relationOptions}
-								/>
-							</div>
-							<div className="col">
-								<SelectOptions
-									name="title"
-									label="Title"
-									id="title"
-									options={titleOptions}
-								/>
-							</div>
+					{/* <div className=""> */}
+					<div className="row">
+						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+							<SelectOptions
+								name="relation"
+								label="Relation"
+								id="relation"
+								options={relationOptions}
+							/>
+						</div>
+						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+							<SelectOptions
+								name="title"
+								label="Title"
+								id="title"
+								options={titleOptions}
+							/>
 						</div>
 					</div>
+					{/* </div> */}
 					<div className="row mb-4">
-						<div className="col">
+						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
 							<TextInput label="Date of Birth" name="dateOfBirth" type="date" />
 						</div>
-						<div className="col">
+						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
 							<TextInput label="Telephone No." name="phoneNumber" type="text" />
 						</div>
 					</div>

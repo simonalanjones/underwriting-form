@@ -82,7 +82,8 @@ test('shows errors if entering invalid email address', async () => {
 	// type an invalid email address
 	await user.type(agentEmailField(), 'invalid@EmailAddress');
 	// select another element in the form (cause onBlur event on email)
-	await user.click(agentNameField());
+	user.tab();
+	await waitFor(() => expect(agentEmailField()).not.toHaveFocus());
 	// verify email error message appears
 	expect(
 		screen.getByText(validationMessages.agentEmail.invalid)

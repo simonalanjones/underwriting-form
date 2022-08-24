@@ -16,7 +16,7 @@ export default function DependantCheck({ callback, checked }) {
 	};
 
 	return (
-		<div className="alert alert-warning" role="alert">
+		<div className="alert alert-warning mb-4" role="alert">
 			<small>READ TO SUBSCRIBER:</small>
 			<br />
 			Do you have the permission of this dependant to disclose their medical

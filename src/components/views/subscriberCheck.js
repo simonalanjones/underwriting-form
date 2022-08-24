@@ -12,7 +12,7 @@ export default function SubscriberCheck({ callback, checked }) {
 
 	return (
 		<>
-			<div className="alert alert-warning" role="alert">
+			<div className="alert alert-warning mb-4" role="alert">
 				<small>READ TO SUBSCRIBER:</small>
 				&nbsp; It is important to disclose all material facts and not doing so
 				may result in claims not being paid or possibly a cancellation of your

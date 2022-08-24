@@ -26,8 +26,8 @@ export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 	};
 	return (
 		<>
-			<div className="shadow-sm bg-white pt-3 px-5 bg-white border-top">
-				<h6 className="pb-4 mt-2" style={headingStyle}>
+			<div className="shadow-sm bg-white pt-3 px-5 bg-white">
+				<h6 className="mt-2" style={headingStyle}>
 					Edit member
 				</h6>
 				<MemberFields

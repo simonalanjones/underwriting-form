@@ -28,13 +28,23 @@ export default function AddCondition({
 		callbackUpdate(member, condition);
 	};
 
+	const headingStyle = {
+		textTransform: 'uppercase',
+		fontSize: '0.85em',
+		letterSpacing: '1px',
+	};
+
 	return (
 		<>
-			{/* <h6 className="pb-1">Add condition</h6> */}
-			<ConditionFields
-				handleCancel={handleCancel}
-				handleSubmit={handleSubmit}
-			/>
+			<div className="container shadow-sm bg-white pt-3 pb-3 px-5 bg-white">
+				<h6 className="pb-4 mt-2" style={headingStyle}>
+					Add condition
+				</h6>
+				<ConditionFields
+					handleCancel={handleCancel}
+					handleSubmit={handleSubmit}
+				/>
+			</div>
 		</>
 	);
 }

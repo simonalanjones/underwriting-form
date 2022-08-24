@@ -27,15 +27,15 @@ export default function MemberLayout({
 			/>
 
 			<div className="container mt-5">
-				<div className="row">
-					<div className="col-4-lg col">
+				<div className="row gx-5">
+					<div className="col-xs-12 col-lg-4 col-md-12 col-sm-12">
 						<div className="mb-5">
 							<MembershipInfo />
 						</div>
 						<Memberlist />
 					</div>
 
-					<div className="col-8 ps-5">
+					<div className="col-xs-12 col-lg-8 col-md-12 col-sm-12">
 						<Outlet />
 					</div>
 				</div>
