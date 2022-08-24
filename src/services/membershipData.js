@@ -1,10 +1,10 @@
 function getData() {
-	const data = JSON.parse(localStorage.getItem('membershipData'));
+	const data = JSON.parse(sessionStorage.getItem('membershipData'));
 	return data !== null && data !== undefined ? data : [];
 }
 
 function setData(members) {
-	localStorage.setItem('membershipData', JSON.stringify(members));
+	sessionStorage.setItem('membershipData', JSON.stringify(members));
 }
 
 export function hasMembership() {

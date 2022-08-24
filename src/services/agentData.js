@@ -1,10 +1,10 @@
 function getData() {
-	const data = JSON.parse(localStorage.getItem('agentData'));
+	const data = JSON.parse(sessionStorage.getItem('agentData'));
 	return data !== null && data !== undefined ? data : [];
 }
 
 function setData(members) {
-	localStorage.setItem('agentData', JSON.stringify(members));
+	sessionStorage.setItem('agentData', JSON.stringify(members));
 }
 
 export function hasAgent() {
