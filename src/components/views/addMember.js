@@ -1,4 +1,5 @@
 import MemberFields from './forms/memberFields';
+import UIContainer from '../../common/uiContainer';
 
 export default function AddMember({
 	callbackUpdate,
@@ -29,23 +30,13 @@ export default function AddMember({
 		callbackCancel();
 	};
 
-	const headingStyle = {
-		textTransform: 'uppercase',
-		fontSize: '0.85em',
-		letterSpacing: '1px',
-	};
 	return (
-		<>
-			<div className="container shadow-sm bg-white pt-3 px-5 bg-white border-top">
-				<h6 className="pb-4 mt-2" style={headingStyle}>
-					Add member
-				</h6>
-				<MemberFields
-					handleCancel={handleCancel}
-					handleSubmit={handleSubmit}
-					hasSubscriber={hasSubscriber}
-				/>
-			</div>
-		</>
+		<UIContainer title="Add member">
+			<MemberFields
+				handleCancel={handleCancel}
+				handleSubmit={handleSubmit}
+				hasSubscriber={hasSubscriber}
+			/>
+		</UIContainer>
 	);
 }

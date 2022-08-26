@@ -1,9 +1,9 @@
 function getData() {
-	return JSON.parse(localStorage.getItem('messageData'));
+	return JSON.parse(sessionStorage.getItem('messageData'));
 }
 
 function setData(members) {
-	localStorage.setItem('agentData', JSON.stringify(members));
+	sessionStorage.setItem('agentData', JSON.stringify(members));
 }
 
 export function messageCount() {

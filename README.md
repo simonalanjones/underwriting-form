@@ -19,6 +19,6 @@ Each route component will pass most of the presentation to a 'view' component in
 
 View components are wrapped in one of two layouts in _`src/components/views/layouts`_
 
-The temporary storage of application data is managed using the standard local storage API and is managed through _`src/services/`_
+The temporary storage of application data is managed using the session storage API and is managed through _`src/services/`_
 
 [Working demo](https://graceful-tiramisu-e8d2e0.netlify.app/)

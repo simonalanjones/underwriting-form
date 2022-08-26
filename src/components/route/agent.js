@@ -2,6 +2,7 @@ import AgentFields from '../views/forms/agentFields';
 import { hasMembership } from '../../services/membershipData';
 import { setAgent, getAgent } from '../../services/agentData';
 import { useNavigate } from 'react-router-dom';
+import UIContainer from '../../common/uiContainer';
 
 export default function Agent({ postback }) {
 	const navigate = useNavigate();
@@ -16,13 +17,7 @@ export default function Agent({ postback }) {
 	};
 
 	const handleSubmit = (fields) => {
-		const agent = {
-			name: fields.agentName,
-			email: fields.agentEmail,
-			dept: fields.agentDept,
-		};
-
-		setAgent(agent);
+		setAgent(fields);
 		postback();
 		if (hasMembership()) {
 			navigate('/');
@@ -30,11 +25,14 @@ export default function Agent({ postback }) {
 			navigate('/membership');
 		}
 	};
+
 	return (
-		<AgentFields
-			data={agent}
-			handleSubmit={handleSubmit}
-			handleCancel={handleCancel}
-		/>
+		<UIContainer title="Your details" type="slim">
+			<AgentFields
+				data={agent}
+				handleSubmit={handleSubmit}
+				handleCancel={handleCancel}
+			/>
+		</UIContainer>
 	);
 }

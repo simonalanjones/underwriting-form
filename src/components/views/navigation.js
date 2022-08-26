@@ -23,7 +23,7 @@ export default function Navigation() {
 									to="/agent"
 									className="d-block link-dark text-decoration-none"
 								>
-									{agent.name}&nbsp;({agent.email})
+									{agent.agentName}&nbsp;({agent.agentDept})
 								</Link>
 							</div>
 						)}

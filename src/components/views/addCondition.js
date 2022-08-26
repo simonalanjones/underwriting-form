@@ -1,4 +1,5 @@
 import ConditionFields from './forms/conditionFields';
+import UIContainer from '../../common/uiContainer';
 
 export default function AddCondition({
 	member,
@@ -29,12 +30,11 @@ export default function AddCondition({
 	};
 
 	return (
-		<>
-			{/* <h6 className="pb-1">Add condition</h6> */}
+		<UIContainer title="Add condition">
 			<ConditionFields
 				handleCancel={handleCancel}
 				handleSubmit={handleSubmit}
 			/>
-		</>
+		</UIContainer>
 	);
 }

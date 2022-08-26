@@ -1,11 +1,11 @@
 // pure js - just the necessary functions to maintain local storage
 function getData() {
-	const data = JSON.parse(localStorage.getItem('memberData'));
+	const data = JSON.parse(sessionStorage.getItem('memberData'));
 	return data !== null && data !== undefined ? data : [];
 }
 
 function setData(members) {
-	localStorage.setItem('memberData', JSON.stringify(members));
+	sessionStorage.setItem('memberData', JSON.stringify(members));
 }
 
 export function getMembers() {

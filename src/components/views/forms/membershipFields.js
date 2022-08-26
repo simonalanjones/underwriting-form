@@ -1,149 +1,79 @@
-import React, { useState, useEffect, useRef } from 'react';
-import RadioOptions from '../../../common/radioOptions';
+import React from 'react';
+import { Formik, Form } from 'formik';
+import RadioGroup from '../../forms/radioGroup';
+import TextInput from '../../forms/textInput';
+import * as Yup from 'yup';
 
 function MembershipFields(props) {
-	const formRef = useRef();
-	const membershipInput = useRef();
+	const switchFromOptions = ['CREST', 'HARPA', 'Competitor Switch'];
 
-	const handleCancel = props.handleCancel;
-	const handleSubmit = props.handleSubmit;
-
-	const [fields, setFields] = useState({
-		membershipNumber: '',
-		dateCompleted: '',
-		memberSwitchFrom: '',
-	});
-
-	// Handle inital submit, checking validation
-	// before passing up to submit in parent component
-	function submitHandler(event) {
-		event.preventDefault();
-		event.stopPropagation();
-		formRef.current.classList.add('was-validated');
-		if (formRef.current.checkValidity()) {
-			/* callback passed through parent component props */
-			handleSubmit(fields);
-		}
-	}
-
-	useEffect(() => {
-		if (!props.data) {
-			membershipInput.current.focus();
-		}
-	}, [props]);
-
-	// handle incoming prop data, one-time use
-	useEffect(() => {
-		if (props.data) {
-			setFields({
-				membershipNumber:
-					props.data.membershipNumber !== undefined
-						? props.data.membershipNumber
-						: '',
-				dateCompleted:
-					props.data.dateCompleted !== undefined
-						? props.data.dateCompleted
-						: '',
-				memberSwitchFrom:
-					props.data.memberSwitchFrom !== undefined
-						? props.data.memberSwitchFrom
-						: '',
-			});
-		}
-	}, [props.data]);
-
-	const handleChange = (e) => {
-		setFields({
-			...fields,
-			[e.target.name]: e.target.value,
-		});
+	const dateToday = () => {
+		var date = new Date();
+		var today = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+			.toISOString()
+			.split('T')[0];
+		return today;
 	};
 
-	const style = {
-		width: '100%',
-		maxWidth: 500,
-	};
+	const handleSubmitFunction = props.handleSubmit;
+	const handleCancelFunction = props.handleCancel;
 
-	const hasData = () => {
-		return props.data !== undefined && props.data !== null;
-	};
+	const initialValues =
+		props.data !== undefined && Object.keys(props.data).length > 0
+			? props.data
+			: {
+					membershipNumber: '',
+					dateCompleted: dateToday(),
+					memberSwitchFrom: '',
+			  };
 
 	return (
-		<>
-			<form
-				onSubmit={submitHandler}
-				ref={formRef}
-				className="needs-validation p-4 p-md-5 border rounded-3 bg-white mx-auto shadow-sm"
-				noValidate
-				style={style}
-			>
-				<div className="mb-4">
-					<div className="mb-4">
-						<label htmlFor="membershipNumber" className="form-label">
-							Existing Membership No.
-						</label>
-
-						<input
-							type="input"
+		<Formik
+			initialValues={initialValues}
+			validationSchema={Yup.object({
+				membershipNumber: Yup.string().required('Membership Number required'),
+				dateCompleted: Yup.string().required('Completed Date required'),
+				memberSwitchFrom: Yup.string()
+					.oneOf(switchFromOptions, 'Invalid switch')
+					.required('Switch from required'),
+			})}
+			onSubmit={(values, { setSubmitting }) => {
+				handleSubmitFunction(values);
+			}}
+		>
+			<Form className="pb-2">
+				<div className="row">
+					<div className="mb-4 mt-4">
+						<TextInput
+							label="Existing Membership No."
 							name="membershipNumber"
-							ref={membershipInput}
-							className="form-control"
-							id="membershipNumber"
-							value={fields.membershipNumber}
-							onChange={handleChange}
-							required
+							type="text"
 						/>
-						<div className="invalid-feedback">
-							Please enter membership number
-						</div>
-					</div>
-
-					<div className="mb-4">
-						<label htmlFor="dateCompleted" className="form-label">
-							Date completed
-						</label>
-
-						<input
-							type="date"
-							name="dateCompleted"
-							className="form-control"
-							id="dateCompleted"
-							value={fields.dateCompleted}
-							onChange={handleChange}
-							required
-						/>
-					</div>
-
-					<div className="mb-5">
-						<p className="form-label">Member switching from</p>
-
-						<div className="form-group">
-							<RadioOptions
-								name="memberSwitchFrom"
-								changeHandler={handleChange}
-								value={fields.memberSwitchFrom}
-								options={['CREST', 'HARPA', 'Competitor Switch']}
-								checkedItem={fields.memberSwitchFrom}
-								required={true}
-							/>
-						</div>
 					</div>
 				</div>
+				<div className="mb-4">
+					<TextInput label="Date completed" name="dateCompleted" type="date" />
+				</div>
+				<div className="mb-5">
+					<RadioGroup
+						name="memberSwitchFrom"
+						label="Member switching from"
+						options={switchFromOptions}
+					/>
+				</div>
 				<button type="submit" className="btn btn-primary">
-					{hasData() ? 'Update' : 'Submit'}
+					Submit
 				</button>
 				&nbsp;
-				{hasData() && (
-					<button
-						type="submit"
-						onClick={handleCancel}
-						className="btn btn-secondary"
-					>
-						Cancel
-					</button>
-				)}
-			</form>
-		</>
+				<button
+					type="submit"
+					onClick={handleCancelFunction}
+					className="btn btn-secondary"
+				>
+					Cancel
+				</button>
+			</Form>
+		</Formik>
 	);
 }
 

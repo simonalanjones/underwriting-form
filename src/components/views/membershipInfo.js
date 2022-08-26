@@ -14,7 +14,7 @@ function MembershipInfo() {
 		<>
 			{Object.keys(data).length > 0 && (
 				<>
-					<div className="container shadow-sm bg-white pt-3 px-4 border-top">
+					<div className="container shadow-sm bg-white pt-3 px-4">
 						<div className="d-flex justify-content-between">
 							<h6 className="pb-4 mt-2" style={headingStyle}>
 								Membership
