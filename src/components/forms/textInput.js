@@ -1,15 +1,15 @@
+import React from 'react';
 import { useField } from 'formik';
 
-const TextInput = ({ label, ...props }) => {
+const TextInput = React.forwardRef((props, ref) => {
 	const [field, meta] = useField(props);
-	// console.log('field', field);
-	// console.log('props', props);
 	return (
 		<>
 			<label className="form-label" htmlFor={props.id || props.name}>
-				{label}
+				{props.label}
 			</label>
 			<input
+				ref={ref}
 				className={
 					meta.touched && meta.error
 						? 'form-control is-invalid'
@@ -24,6 +24,6 @@ const TextInput = ({ label, ...props }) => {
 			) : null}
 		</>
 	);
-};
+});
 
 export default TextInput;

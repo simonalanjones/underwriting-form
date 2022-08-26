@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useRef } from 'react';
 import { Formik, Form } from 'formik';
 import RadioGroup from '../../forms/radioGroup';
 import TextInput from '../../forms/textInput';
@@ -16,6 +16,13 @@ const AgentFields = (props) => {
 			  };
 	const handleSubmitFunction = props.handleSubmit;
 	const handleCancelFunction = props.handleCancel;
+	const ref = useRef();
+
+	useEffect(() => {
+		if (props.data !== undefined && props.data.length === 0) {
+			ref.current.focus();
+		}
+	}, [props]);
 
 	return (
 		<Formik
@@ -33,21 +40,18 @@ const AgentFields = (props) => {
 			})}
 			onSubmit={(values, { setSubmitting }) => {
 				handleSubmitFunction(values);
-				// setTimeout(() => {
-				// 	alert(JSON.stringify(values, null, 2));
-				// 	setSubmitting(false);
-				// }, 400);
 			}}
 		>
-			<Form
-				style={{
-					width: '100%',
-					maxWidth: 500,
-				}}
-				className="p-4 p-md-5 border rounded-3 bg-white shadow-sm mx-auto"
-			>
-				<div className="mb-4">
-					<TextInput label="Agent name" name="agentName" type="text" />
+			<Form className="pb-2">
+				<div className="row">
+					<div className="mb-4 mt-4">
+						<TextInput
+							ref={ref}
+							label="Agent name"
+							name="agentName"
+							type="text"
+						/>
+					</div>
 				</div>
 				<div className="mb-4">
 					<TextInput label="Agent email" name="agentEmail" type="email" />

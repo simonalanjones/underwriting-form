@@ -1,4 +1,5 @@
 import ConditionFields from './forms/conditionFields';
+import UIContainer from '../../common/uiContainer';
 
 export default function EditCondition({
 	callbackUpdate,
@@ -27,13 +28,12 @@ export default function EditCondition({
 	};
 
 	return (
-		<>
-			{/* <h6 className="pb-1">Edit condition</h6> */}
+		<UIContainer title="Edit condition">
 			<ConditionFields
 				data={condition}
 				handleCancel={handleCancel}
 				handleSubmit={handleSubmit}
 			/>
-		</>
+		</UIContainer>
 	);
 }

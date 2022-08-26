@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import RadioGroup from '../../forms/radioGroup';
@@ -5,11 +6,9 @@ import TextArea from '../../forms/textArea';
 import TextInput from '../../forms/textInput';
 
 function ConditionFields(props) {
-	//const formRef = useRef();
-	//const conditionInput = useRef();
-
 	const handleCancel = props.handleCancel;
 	const handleSubmit = props.handleSubmit;
+	const ref = useRef();
 
 	const initialValues =
 		props.data !== undefined && Object.keys(props.data).length > 0
@@ -25,12 +24,12 @@ function ConditionFields(props) {
 					notes: '',
 			  };
 
-	// give the medical condition field focus only new new entry
-	// useEffect(() => {
-	// 	if (!props.data) {
-	// 		conditionInput.current.focus();
-	// 	}
-	// }, [props]);
+	//give the medical condition field focus only new new entry
+	useEffect(() => {
+		if (!props.data) {
+			ref.current.focus();
+		}
+	}, [props]);
 
 	return (
 		<Formik
@@ -67,11 +66,16 @@ function ConditionFields(props) {
 			}}
 		>
 			{(props) => (
-				<Form>
-					{/* <pre>{JSON.stringify(props, null, 2)}</pre> */}
-					{/* <div className="p-5 bg-white shadow-sm"> */}
-					<div className="mb-4">
-						<TextInput label="Medical condition" name="condition" type="text" />
+				<Form className="pb-2">
+					<div className="row">
+						<div className="mb-4 mt-4">
+							<TextInput
+								ref={ref}
+								label="Medical condition"
+								name="condition"
+								type="text"
+							/>
+						</div>
 					</div>
 					<div className="mb-4">
 						<RadioGroup
@@ -126,7 +130,6 @@ function ConditionFields(props) {
 					<button onClick={() => handleCancel()} className="btn btn-secondary">
 						Cancel
 					</button>
-					{/* </div> */}
 				</Form>
 			)}
 		</Formik>

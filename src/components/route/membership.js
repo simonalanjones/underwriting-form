@@ -1,6 +1,7 @@
 import MembershipFields from '../views/forms/membershipFields';
 import { setMembership, getMembership } from '../../services/membershipData';
 import { useNavigate } from 'react-router-dom';
+import UIContainer from '../../common/uiContainer';
 
 export default function Membership({ postback }) {
 	const navigate = useNavigate();
@@ -22,12 +23,12 @@ export default function Membership({ postback }) {
 	};
 
 	return (
-		<div className="row">
+		<UIContainer title="Membership" type="slim">
 			<MembershipFields
 				data={getMembership()}
 				handleSubmit={handleSubmit}
 				handleCancel={handleCancel}
 			/>
-		</div>
+		</UIContainer>
 	);
 }

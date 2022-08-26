@@ -41,19 +41,15 @@ function MembershipFields(props) {
 				handleSubmitFunction(values);
 			}}
 		>
-			<Form
-				style={{
-					width: '100%',
-					maxWidth: 500,
-				}}
-				className="p-4 p-md-5 border rounded-3 bg-white mx-auto shadow-sm"
-			>
-				<div className="mb-4">
-					<TextInput
-						label="Existing Membership No."
-						name="membershipNumber"
-						type="text"
-					/>
+			<Form className="pb-2">
+				<div className="row">
+					<div className="mb-4 mt-4">
+						<TextInput
+							label="Existing Membership No."
+							name="membershipNumber"
+							type="text"
+						/>
+					</div>
 				</div>
 				<div className="mb-4">
 					<TextInput label="Date completed" name="dateCompleted" type="date" />

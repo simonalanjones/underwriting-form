@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Formik, Form, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import DependantCheck from '../dependantCheck';
@@ -10,6 +10,7 @@ function MemberFields(props) {
 	const [formRelation, setFormRelation] = useState('');
 	const [disclaimerChecked, setDisclaimerChecked] = useState(false);
 
+	const ref = useRef();
 	// used to track whether we are inputting a subscriber or dependant
 	// the disclosure box will appear based on this value
 	// as Formik change handler is already taken, we will observe the value changes
@@ -65,7 +66,6 @@ function MemberFields(props) {
 		if (initialValues.userFirstName !== '') {
 			enableSubmit(true);
 		}
-		//initialValues.userFirstName !== '' && setDisclaimerChecked(true);
 	}, [initialValues.userFirstName]);
 
 	const handleCancel = props.handleCancel;
@@ -75,11 +75,11 @@ function MemberFields(props) {
 		setDisclaimerChecked(state);
 	}
 
-	// useEffect(() => {
-	// 	if (!props.data) {
-	// 		firstnameInput.current.focus();
-	// 	}
-	// }, [props]);
+	useEffect(() => {
+		if (!props.data) {
+			ref.current.focus();
+		}
+	}, [props]);
 
 	return (
 		<Formik
@@ -100,69 +100,67 @@ function MemberFields(props) {
 				handleSubmit(values);
 			}}
 		>
-			<Form>
+			<Form className="pb-2">
 				<FormObserver />
-				<div className={'pb-4 mb-4'}>
-					<div className="row">
-						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
-							<TextInput label="First name" name="userFirstName" type="text" />
-						</div>
-						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
-							<TextInput label="Last name" name="userLastName" type="text" />
-						</div>
-					</div>
-					{/* <div className=""> */}
-					<div className="row">
-						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
-							<SelectOptions
-								name="relation"
-								label="Relation"
-								id="relation"
-								options={relationOptions}
-							/>
-						</div>
-						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
-							<SelectOptions
-								name="title"
-								label="Title"
-								id="title"
-								options={titleOptions}
-							/>
-						</div>
-					</div>
-					{/* </div> */}
-					<div className="row mb-4">
-						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
-							<TextInput label="Date of Birth" name="dateOfBirth" type="date" />
-						</div>
-						<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
-							<TextInput label="Telephone No." name="phoneNumber" type="text" />
-						</div>
-					</div>
-					{formRelation === 'subscriber' && (
-						<SubscriberCheck
-							callback={enableSubmit}
-							checked={disclaimerChecked}
+				<div className="row">
+					<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+						<TextInput
+							ref={ref}
+							label="First name"
+							name="userFirstName"
+							type="text"
 						/>
-					)}
-					{formRelation === 'dependant' && (
-						<DependantCheck
-							callback={enableSubmit}
-							checked={disclaimerChecked}
-						/>
-					)}
-					<button
-						type="submit"
-						className="btn btn-primary"
-						disabled={!disclaimerChecked}
-					>
-						{!props.data ? 'Submit' : 'Update'}
-					</button>
-					&nbsp;
-					<button onClick={handleCancel} className="btn btn-secondary">
-						Cancel
-					</button>
+					</div>
+					<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+						<TextInput label="Last name" name="userLastName" type="text" />
+					</div>
 				</div>
+				<div className="row">
+					<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+						<SelectOptions
+							name="relation"
+							label="Relation"
+							id="relation"
+							options={relationOptions}
+						/>
+					</div>
+					<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+						<SelectOptions
+							name="title"
+							label="Title"
+							id="title"
+							options={titleOptions}
+						/>
+					</div>
+				</div>
+				<div className="row mb-4">
+					<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+						<TextInput label="Date of Birth" name="dateOfBirth" type="date" />
+					</div>
+					<div className="col-lg-6 col-md-6 col-sm-12 mt-4">
+						<TextInput label="Telephone No." name="phoneNumber" type="text" />
+					</div>
+				</div>
+				{formRelation === 'subscriber' && (
+					<SubscriberCheck
+						callback={enableSubmit}
+						checked={disclaimerChecked}
+					/>
+				)}
+				{formRelation === 'dependant' && (
+					<DependantCheck callback={enableSubmit} checked={disclaimerChecked} />
+				)}
+				<button
+					type="submit"
+					className="btn btn-primary"
+					disabled={!disclaimerChecked}
+				>
+					{!props.data ? 'Submit' : 'Update'}
+				</button>
+				&nbsp;
+				<button onClick={handleCancel} className="btn btn-secondary">
+					Cancel
+				</button>
 			</Form>
 		</Formik>
 	);

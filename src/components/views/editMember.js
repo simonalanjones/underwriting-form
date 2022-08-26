@@ -1,4 +1,5 @@
 import MemberFields from './forms/memberFields';
+import UIContainer from '../../common/uiContainer';
 
 export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 	const handleSubmit = (fields) => {
@@ -19,23 +20,14 @@ export default function EditMember({ member, callbackUpdate, callbackCancel }) {
 	const handleCancel = () => {
 		callbackCancel();
 	};
-	const headingStyle = {
-		textTransform: 'uppercase',
-		fontSize: '0.85em',
-		letterSpacing: '1px',
-	};
+
 	return (
-		<>
-			<div className="shadow-sm bg-white pt-3 px-5 bg-white">
-				<h6 className="mt-2" style={headingStyle}>
-					Edit member
-				</h6>
-				<MemberFields
-					data={member}
-					handleSubmit={handleSubmit}
-					handleCancel={handleCancel}
-				/>
-			</div>
-		</>
+		<UIContainer title="Edit member">
+			<MemberFields
+				data={member}
+				handleSubmit={handleSubmit}
+				handleCancel={handleCancel}
+			/>
+		</UIContainer>
 	);
 }
