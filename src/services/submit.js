@@ -1,10 +1,10 @@
-const getAgent = require('./agentData').getAgent;
-const getMembership = require('./membershipData').getMembership;
-const getMember = require('./memberData').getMembers;
+//const getAgent = require('./agentData').getAgent;
+//const getMembership = require('./membershipData').getMembership;
+//const getMember = require('./memberData').getMembers;
 
-const axios = require('axios').default;
-let status = '';
-const endPoint = 'localhost:3000';
+//const axios = require('axios').default;
+//let status = '';
+//const endPoint = 'localhost:3000';
 
 export function submit(postCallbackSubmitForm) {
 	// axios.defaults.headers.post['Content-Type'] =
