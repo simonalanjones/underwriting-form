@@ -123,10 +123,10 @@ describe('renders the correct disclaimers for different relation types', () => {
 
 describe('interact with form elements', () => {
 	test('can type into firstname field', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
-		const user = userEvent.setup();
 
 		const firstnameInput = firstNameField();
 		await user.type(firstNameField(), subscriberData.userFirstName);
@@ -136,10 +136,10 @@ describe('interact with form elements', () => {
 	});
 
 	test('can type into lastname field', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
-		const user = userEvent.setup();
 
 		const lastnameInput = lastNameField();
 		await user.type(lastnameInput, subscriberData.userLastName);
@@ -173,39 +173,36 @@ describe('interact with form elements', () => {
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
 
-		const dobField = dateOfBirthField();
-		fireEvent.change(dobField, {
-			target: { value: subscriberData.dateOfBirth },
-		});
+		const event = new Event('change');
 
-		await waitFor(() =>
-			expect(dobField.value).toBe(subscriberData.dateOfBirth)
-		);
+		const dateInput = dateOfBirthField();
+		dateInput.value = subscriberData.dateOfBirth;
+		await waitFor(() => dateInput.dispatchEvent(event));
+
+		expect(dateInput.value).toBe(subscriberData.dateOfBirth);
 	});
 
 	test('can type into telephone field', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
-		const user = userEvent.setup();
 
 		const telephoneInput = telephoneField();
 		await user.type(telephoneInput, subscriberData.phoneNumber);
-		await waitFor(() =>
-			expect(telephoneInput.value).toBe(subscriberData.phoneNumber)
-		);
+		expect(telephoneInput.value).toBe(subscriberData.phoneNumber);
 	});
 });
 
 describe('trigger validation messages', () => {
-	//it.todo('Should show errors if submit without data');
+	// 	//it.todo('Should show errors if submit without data');
 
 	test('focus in/out of firstname field shows error', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
 
-		const user = userEvent.setup();
 		const firstNameElement = firstNameField();
 
 		// verify the validation message not on screen
@@ -226,11 +223,11 @@ describe('trigger validation messages', () => {
 	});
 
 	test('focus in/out of lastname field shows error', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
 
-		const user = userEvent.setup();
 		const lastNameElement = lastNameField();
 
 		// verify the validation message not on screen
@@ -251,11 +248,11 @@ describe('trigger validation messages', () => {
 	});
 
 	test('focus in/out of relation field shows error', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
 
-		const user = userEvent.setup();
 		const relationElement = relationField();
 
 		// verify the validation message not on screen
@@ -276,11 +273,11 @@ describe('trigger validation messages', () => {
 	});
 
 	test('focus in/out of title field shows error', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
 
-		const user = userEvent.setup();
 		const titleElement = titleField();
 
 		// verify the validation message not on screen
@@ -301,11 +298,11 @@ describe('trigger validation messages', () => {
 	});
 
 	test('focus in/out of DOB field shows error', async () => {
+		const user = userEvent.setup();
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
 
-		const user = userEvent.setup();
 		const dobElement = dateOfBirthField();
 
 		// verify the validation message not on screen
@@ -314,9 +311,9 @@ describe('trigger validation messages', () => {
 		).not.toBeInTheDocument();
 
 		// focus and then defocus the firstname field
-		dobElement.focus();
+		await waitFor(() => dobElement.focus());
 		await waitFor(() => expect(dobElement).toHaveFocus());
-		user.tab();
+		await waitFor(() => user.tab());
 		await waitFor(() => expect(dobElement).not.toHaveFocus());
 
 		// verify the validation message is now on screen
@@ -327,12 +324,12 @@ describe('trigger validation messages', () => {
 });
 
 describe('submit a test form', () => {
+	const user = userEvent.setup();
 	test('can submit form', async () => {
 		render(
 			<MemberFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
 
-		const user = userEvent.setup();
 		await user.type(firstNameField(), subscriberData.userFirstName);
 		await user.type(lastNameField(), subscriberData.userLastName);
 		await userEvent.selectOptions(relationField(), subscriberData.relation);
@@ -354,7 +351,7 @@ describe('submit a test form', () => {
 		fireEvent.click(disclaimerCheckbox);
 		await waitFor(() => expect(disclaimerCheckbox).toBeChecked());
 
-		// // submit button should be enabled after selecting checkbox
+		// submit button should be enabled after selecting checkbox
 		expect(submitButtonElement).toBeEnabled();
 
 		await waitFor(() => user.click(submitButtonElement));
