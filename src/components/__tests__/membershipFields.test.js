@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MembershipFields from '../views/forms/membershipFields';
 
@@ -70,18 +70,20 @@ describe('interact with form elements', () => {
 		render(
 			<MembershipFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
+
+		const event = new Event('change');
+
 		const dateInput = screen.getByLabelText('Date completed');
+		dateInput.value = testData.dateCompleted;
+		await waitFor(() => dateInput.dispatchEvent(event));
 
-		fireEvent.change(dateInput, {
-			target: { value: testData.dateCompleted },
-		});
-
-		await waitFor(() => expect(dateInput.value).toBe(testData.dateCompleted));
+		expect(dateInput.value).toBe(testData.dateCompleted);
 	});
 
 	test('can select each radio button', async () => {
-		render(<MembershipFields />);
 		const user = userEvent.setup();
+		render(<MembershipFields />);
+
 		for (let i = 0; i < radioOptions.length; i++) {
 			const switchFromInput = screen.getByLabelText(radioOptions[i]);
 			await user.click(switchFromInput);
@@ -90,22 +92,19 @@ describe('interact with form elements', () => {
 	});
 
 	test('can type into membership number field', async () => {
-		render(<MembershipFields />);
 		const user = userEvent.setup();
+		render(<MembershipFields />);
 
 		const membershipInput = screen.getByLabelText('Existing Membership No.');
 		await user.type(membershipInput, testData.membershipNumber);
-
-		await waitFor(() =>
-			expect(membershipInput.value).toBe(testData.membershipNumber)
-		);
+		expect(membershipInput.value).toBe(testData.membershipNumber);
 	});
 });
 
 describe('Submit and cancel functions', () => {
 	test('shows errors if submitting incomplete form', async () => {
-		render(<MembershipFields />);
 		const user = userEvent.setup();
+		render(<MembershipFields />);
 
 		// verify there are no error messages present on inital render
 		const errorMembership = screen.queryByText('Membership Number required');

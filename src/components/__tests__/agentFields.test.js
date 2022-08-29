@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import AgentFields from '../views/forms/agentFields';
 
@@ -32,7 +32,6 @@ const agentNameField = () => screen.getByLabelText('Agent name');
 const agentEmailField = () => screen.getByLabelText('Agent email');
 const retentionField = () => screen.getByLabelText('Retention');
 const acquisitionField = () => screen.getByLabelText('Acquisition');
-//const agentDeptInput = () => screen.getByLabelText(testData.agentDept);
 const submitButton = () => screen.getByRole('button', { name: 'Submit' });
 
 // tests begin
@@ -57,8 +56,8 @@ test('renders form and prepopulate fields', () => {
 });
 
 test('can type into each form field and select each radio option', async () => {
-	render(<AgentFields />);
 	const user = userEvent.setup();
+	render(<AgentFields />);
 
 	const agentNameInput = screen.getByLabelText('Agent name');
 	const agentEmailInput = screen.getByLabelText('Agent email');
@@ -77,55 +76,67 @@ test('can type into each form field and select each radio option', async () => {
 });
 
 test('shows errors if entering invalid email address', async () => {
-	render(<AgentFields />);
 	const user = userEvent.setup();
+	render(<AgentFields />);
 	// type an invalid email address
-	await user.type(agentEmailField(), 'invalid@EmailAddress');
+	await waitFor(() => user.type(agentEmailField(), 'invalid@EmailAddress'));
 	// select another element in the form (cause onBlur event on email)
-	user.tab();
-	await waitFor(() => expect(agentEmailField()).not.toHaveFocus());
+	// this changes state!
+	await waitFor(() => user.tab());
+	expect(agentEmailField()).not.toHaveFocus();
 	// verify email error message appears
-	expect(
-		screen.getByText(validationMessages.agentEmail.invalid)
-	).toBeInTheDocument();
+
+	await waitFor(() => {
+		expect(
+			screen.getByText(validationMessages.agentEmail.invalid)
+		).toBeInTheDocument();
+	});
 });
 
 test('shows errors if submitting incomplete form', async () => {
-	render(<AgentFields />);
 	const user = userEvent.setup();
+	render(<AgentFields />);
 
-	// verify error messages not present on intial render
-	expect(
-		screen.queryByText(validationMessages.agentName.required)
-	).not.toBeInTheDocument();
+	await waitFor(() =>
+		expect(
+			screen.queryByText(validationMessages.agentName.required)
+		).not.toBeInTheDocument()
+	);
 
-	expect(
-		screen.queryByText(validationMessages.agentEmail.required)
-	).not.toBeInTheDocument();
+	await waitFor(() =>
+		expect(
+			screen.queryByText(validationMessages.agentEmail.required)
+		).not.toBeInTheDocument()
+	);
 
-	expect(
-		screen.queryByText(validationMessages.agentDept.required)
-	).not.toBeInTheDocument();
+	await waitFor(() =>
+		expect(
+			screen.queryByText(validationMessages.agentDept.required)
+		).not.toBeInTheDocument()
+	);
 
 	// submit form without completing any fields
 	const submitButton = screen.getByRole('button', { name: 'Submit' });
-	await waitFor(() => user.click(submitButton));
 
-	// verify error messages are now present
-	const agentNameErrorText = await screen.findByText(
-		validationMessages.agentName.required
-	);
-	expect(agentNameErrorText).toBeInTheDocument();
+	user.click(submitButton);
 
-	const agentEmailErrorText = await screen.findByText(
-		validationMessages.agentEmail.required
-	);
-	expect(agentEmailErrorText).toBeInTheDocument();
+	await waitFor(() => {
+		expect(
+			screen.getByText(validationMessages.agentName.required)
+		).toBeInTheDocument();
+	});
 
-	const agentDeptErrorText = await screen.findByText(
-		validationMessages.agentDept.required
-	);
-	expect(agentDeptErrorText).toBeInTheDocument();
+	await waitFor(() => {
+		expect(
+			screen.getByText(validationMessages.agentEmail.required)
+		).toBeInTheDocument();
+	});
+
+	await waitFor(() => {
+		expect(
+			screen.getByText(validationMessages.agentDept.required)
+		).toBeInTheDocument();
+	});
 });
 
 test('can successfully submit form', async () => {
