@@ -1,6 +1,6 @@
 {
 	"name": "uw-form-router",
-	"homepage": "https://staging-healthnet.axahealth.intraxa/intranet/uw-form/",
+	"_homepage_": "https://staging-healthnet.axahealth.intraxa/intranet/uw-form-email/",
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {

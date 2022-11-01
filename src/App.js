@@ -86,8 +86,8 @@ const App = () => {
 
 	return (
 		<>
-			{/* <Router basename="/intranet/uw-form"> */}
-			<Router>
+			<Router basename="/intranet/uw-form-email">
+				{/* <Router> */}
 				<Progress amount={progress} />
 
 				<Routes>

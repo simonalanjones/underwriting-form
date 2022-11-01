@@ -111,10 +111,10 @@ describe('initial render', () => {
 
 describe('interact with form elements', () => {
 	test('can type into condition field', async () => {
+		const user = userEvent.setup();
 		render(
 			<ConditionFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
-		const user = userEvent.setup();
 
 		const conditionInput = conditionField();
 		await user.type(conditionInput, testData.condition);
@@ -122,10 +122,10 @@ describe('interact with form elements', () => {
 	});
 
 	test('can select each of the radio buttons', async () => {
+		const user = userEvent.setup();
 		render(
 			<ConditionFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
 		);
-		const user = userEvent.setup();
 
 		await user.click(providerYesField());
 		await waitFor(() => expect(providerYesField()).toBeChecked());
@@ -145,15 +145,38 @@ describe('interact with form elements', () => {
 });
 
 describe('submitting the form', () => {
-	// test('shows validation messages when no data is submitted', async() => {
+	test('shows validation messages when no data is submitted', async () => {
+		const user = userEvent.setup();
+		render(
+			<ConditionFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
+		);
 
-	//     render(
-	// 		<ConditionFields handleSubmit={mockSubmit} handleCancel={mockCancel} />
-	// 	);
-	//     const user = userEvent.setup();
-	//     await waitFor(() => user.click(submitButton()));
+		await waitFor(() => user.click(submitButton()));
 
-	// });
+		await waitFor(() => {
+			expect(
+				screen.getByText(validationMessages.condition.required)
+			).toBeInTheDocument();
+		});
+
+		await waitFor(() => {
+			expect(
+				screen.getByText(validationMessages.provider.required)
+			).toBeInTheDocument();
+		});
+
+		await waitFor(() => {
+			expect(
+				screen.getByText(validationMessages.treatment.required)
+			).toBeInTheDocument();
+		});
+
+		await waitFor(() => {
+			expect(
+				screen.getByText(validationMessages.medication.required)
+			).toBeInTheDocument();
+		});
+	});
 
 	test('cannot submit form without completing minimum required fields', async () => {
 		render(
