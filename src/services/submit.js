@@ -34,12 +34,12 @@ export function submit(postCallbackSubmitForm) {
 			//console.log(error);
 			status = error.response.status;
 			//console.log(status);
+		})
+		.then(function () {
+			// always executed
+			if (typeof (postCallbackSubmitForm === 'function')) {
+				postCallbackSubmitForm(status);
+			}
 		});
-	// 	.then(function () {
-	// 		// always executed
-	// 		if (typeof (postCallbackSubmitForm === 'function')) {
-	// 			postCallbackSubmitForm(status);
-	// 		}
-	// 	});
-	//postCallbackSubmitForm(200);
+	postCallbackSubmitForm(200);
 }
