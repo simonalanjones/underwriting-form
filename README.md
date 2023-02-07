@@ -22,3 +22,13 @@ View components are wrapped in one of two layouts in _`src/components/views/layo
 The temporary storage of application data is managed using the session storage API and is managed through _`src/services/`_
 
 [Working demo](https://graceful-tiramisu-e8d2e0.netlify.app/)
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details
+
+## Screenshots
+
+<img src='/public/images/screenshot1.png' />
+<img src='/public/images/screenshot2.png' />
+<img src='/public/images/screenshot3.png' />
